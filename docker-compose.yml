@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    image: node:latest
+    working_dir: /app/be
+    build: ./bge-be/
+    volumes:
+      - ./bge-be:/app/be
+      - /app/be/node_modules
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_DB_URL: "mongodb://mongodb:27017"
+    depends_on:
+      - mongodb
+    command: pnpm start:docker
+
+  frontend:
+      image: node:latest
+      working_dir: /app/fe
+      build: ./bge-fe/
+      volumes:
+        - ./bge-fe:/app/fe
+        - /app/fe/node_modules
+      ports:
+        - "3000:3000"
+      command: "pnpm dev"
+
+volumes:
+  mongodb_data:
