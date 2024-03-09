@@ -6,7 +6,7 @@ RUN npm i -g pnpm
 WORKDIR /app/fe
 
 # Copy the package.json and package-lock.json files to the container
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml tailwind.config.ts tsconfig.json ./
 
 # Install dependencies
 RUN pnpm install
