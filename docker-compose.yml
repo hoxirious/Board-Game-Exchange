@@ -5,6 +5,7 @@ services:
     image: "mongo"
     volumes:
       - mongodb_data:/data/db
+      - ./init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
     ports:
       - "27017:27017"
     environment:
@@ -18,7 +19,9 @@ services:
   backend:
     image: node:latest
     working_dir: /app/be
-    build: ./bge-be/
+    build:
+      context: ./bge-be/
+      dockerfile: Dockerfile
     volumes:
       - ./bge-be:/app/be
       - /app/be/node_modules
@@ -31,15 +34,17 @@ services:
     command: pnpm start:docker
 
   frontend:
-      image: node:latest
-      working_dir: /app/fe
-      build: ./bge-fe/
-      volumes:
-        - ./bge-fe:/app/fe
-        - /app/fe/node_modules
-      ports:
-        - "3000:3000"
-      command: "pnpm dev"
+    image: node:latest
+    working_dir: /app/fe
+    build:
+      context: ./bge-fe/
+      dockerfile: Dockerfile
+    volumes:
+      - ./bge-fe:/app/fe
+      - /app/fe/node_modules
+    ports:
+      - "3000:3000"
+    command: "pnpm dev"
 
 volumes:
   mongodb_data:
