@@ -3,6 +3,7 @@ version: "3.8"
 services:
   mongodb:
     image: "mongo"
+    container_name: database
     volumes:
       - mongodb_data:/data/db
       - ./init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
@@ -28,7 +29,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      MONGO_DB_URL: "mongodb://mongodb:27017"
+      MONGO_DB_URL: "mongodb://database:27017"
     depends_on:
       - mongodb
     command: pnpm start:docker
