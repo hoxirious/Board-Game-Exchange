@@ -3,7 +3,7 @@ const userSchema = {
     validator: {
         $jsonSchema: {
             bsonType: 'object',
-            required: ['username', 'password', 'email', 'dateCreated', 'location', 'fullName', 'profilePictureUrl'],
+            required: ['username', 'password', 'email', 'dateCreated', 'location', 'fullName', 'profilePictureUrl', 'isAdmin'],
             properties: {
                 username: { bsonType: 'string' },
                 password: { bsonType: 'string' },
@@ -11,7 +11,8 @@ const userSchema = {
                 dateCreated: { bsonType: 'date' },
                 location: { bsonType: 'string' },
                 fullName: { bsonType: 'string' },
-                profilePictureUrl: { bsonType: 'string' }
+                profilePictureUrl: { bsonType: 'string' },
+                isAdmin: { bsonType: 'bool'}
             }
         }
     }
@@ -44,10 +45,8 @@ const boardGameSchema = {
             required: ['title', 'category'],
             properties: {
                 title: { bsonType: 'string' },
-                image: {
-                    bsonType: 'string'
-                },
-                category: { bsonType: 'string' }
+                category: { bsonType: 'string' },
+                image: {bsonType: 'string'}
             }
         }
     }
@@ -97,5 +96,70 @@ async function createCollectionWithValidator(db, name, schema) {
     console.log(`${name} collection created`);
 }
 
+async function seedUserAndPostsAndMessages() {
+    let users = [];
+    for (let i = 1; i <= 2; i++) {
+        users.push({
+            username: `test_user_${i}`,
+            password: `test_password_${i}`,
+            email: `test_user${i}@mail.com`,
+            dateCreated: new Date(Date.now()),
+            location: ``,
+            fullName: `Test User`,
+            profilePictureUrl: ``,
+            isAdmin: false
+        });
+    }
+
+    let response = db.getCollection('users').insertMany(users);
+
+    let userId1 = response['insertedIds'][0].toString();
+    let userId2 = response['insertedIds'][1].toString();
+
+    let posts = [];
+    for (let i = 1; i <= 10; i++) {
+        posts.push({
+            postsPictureUrl: "https://cf.geekdo-images.com/original/img/A-0yDJkve0avEicYQ4HoNO-HkK8=/0x0/pic2419375.jpg",
+            title: `BoardGame${i}`,
+            description: `This is a test description`,
+            location: "Test Location",
+            condition: "Used - Like New",
+            category: "Card Game",
+            ownerUserID: userId1,
+            dateCreated: new Date(Date.now())
+        })
+    }
+
+    response = db.getCollection('posts').insertMany(posts);
+
+    let postId = response['insertedIds'][0].toString();
+
+    let messages = [];
+    for (let i = 1; i <= 4; i++) {
+        messages.push({
+            timestamp: new Date(Date.now()),
+            text: `first: message ${i}`,
+            postId: postId,
+            senderUserID: userId2,
+            receiverUserID: userId1,
+            senderStatus: 'SUCCESS',
+            hasReceiverSeen: false
+        })
+
+        messages.push({
+            timestamp: new Date(Date.now()),
+            text: `reply: message ${i}`,
+            postId: postId,
+            senderUserID: userId2,
+            receiverUserID: userId1,
+            senderStatus: 'SUCCESS',
+            hasReceiverSeen: false
+        })
+    }
+
+    db.getCollection('messages').insertMany(messages);
+}
+
 // Call the initialization function
 init();
+seedUserAndPostsAndMessages();
