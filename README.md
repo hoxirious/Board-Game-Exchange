@@ -14,11 +14,12 @@ Rupert Amodia - 30085822
 
 
 ## Prerequisite
-- docker compose
-- docker engine
+
+- Docker Compose
+- Docker Engine
 - MongoDB Compass
 
-## Run Docker Compose
+## How to build
 
 - To compose the containers including seeding mockup data into database, run this:
 
@@ -32,8 +33,7 @@ docker compose  up --build
 mongodb://admin:password@localhost:27017/
 ```
 
-- Go into bge-db table and check any of the collection for the mockup data.
-
+- Go into `bge-db` table and check for the mockup data inside any of the collections
 
 - To bring the containers down, run this:
 ```
