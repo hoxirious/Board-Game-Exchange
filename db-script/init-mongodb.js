@@ -37,13 +37,16 @@ const messageSchema = {
 };
 
 // Define schema for Board Game Categories Table
-const categorySchema = {
+const boardGameSchema = {
     validator: {
         $jsonSchema: {
             bsonType: 'object',
             required: ['title', 'category'],
             properties: {
                 title: { bsonType: 'string' },
+                image: {
+                    bsonType: 'string'
+                },
                 category: { bsonType: 'string' }
             }
         }
@@ -75,9 +78,9 @@ async function init() {
     try {
         // Check if collections exist, if not, create them with validators
         await Promise.all([
+            createCollectionWithValidator(db, 'boardGames', boardGameSchema),
             createCollectionWithValidator(db, 'users', userSchema),
             createCollectionWithValidator(db, 'messages', messageSchema),
-            createCollectionWithValidator(db, 'categories', categorySchema),
             createCollectionWithValidator(db, 'posts', postSchema)
         ]);
 

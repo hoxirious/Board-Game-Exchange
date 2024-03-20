@@ -17,9 +17,6 @@ export async function connectToDatabase() {
 
     const db: mongoDB.Db = client.db(process.env.DB_NAME);
 
-    const gamesCollection: mongoDB.Collection = db.collection(process.env.GAMES_COLLECTION_NAME!);
-
-    collections.games = gamesCollection;
     await db.createCollection(process.env.GAMES_COLLECTION_NAME!, {
         "validator": {
             $jsonSchema: {
@@ -45,5 +42,4 @@ export async function connectToDatabase() {
         }
     });
 
-    console.log(`Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`);
 }

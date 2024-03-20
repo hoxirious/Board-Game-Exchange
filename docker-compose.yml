@@ -6,7 +6,8 @@ services:
     container_name: database
     volumes:
       - mongodb_data:/data/db
-      - ./init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
+      - ./db-script/init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
+      - ./db-script/seed-boardgame.js:/docker-entrypoint-initdb.d/seed-boardgame.js:ro
     ports:
       - "27017:27017"
     environment:
