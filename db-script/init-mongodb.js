@@ -59,7 +59,10 @@ const postSchema = {
             bsonType: 'object',
             required: ['postsPictureUrl', 'title', 'description', 'location', 'condition', 'category', 'ownerUserID', 'dateCreated'],
             properties: {
-                postsPictureUrl: { bsonType: 'string' },
+                postsPictureUrl: {
+                    bsonType: 'array',
+                    items: { bsonType: 'string' }
+                },
                 title: { bsonType: 'string' },
                 description: { bsonType: 'string' },
                 location: { bsonType: 'string' },
@@ -119,7 +122,7 @@ async function seedUserAndPostsAndMessages() {
     let posts = [];
     for (let i = 1; i <= 10; i++) {
         posts.push({
-            postsPictureUrl: "https://cf.geekdo-images.com/original/img/A-0yDJkve0avEicYQ4HoNO-HkK8=/0x0/pic2419375.jpg",
+            postsPictureUrl: ["https://cf.geekdo-images.com/original/img/A-0yDJkve0avEicYQ4HoNO-HkK8=/0x0/pic2419375.jpg"],
             title: `BoardGame${i}`,
             description: `This is a test description`,
             location: "Test Location",
