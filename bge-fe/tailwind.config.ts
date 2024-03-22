@@ -25,12 +25,28 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "hsl(var(--color-primary))",
+          '50': 'hsl(var(--color-primary-50))',
+          '100': 'hsl(var(--color-primary-100))',
+          '200': 'hsl(var(--color-primary-200))',
+          '300': 'hsl(var(--color-primary-300))',
+          '400': 'hsl(var(--color-primary-400))',
+          '500': 'hsl(var(--color-primary-500))',
+          '600': 'hsl(var(--color-primary-600))',
+          '700': 'hsl(var(--color-primary-700))',
+          '800': 'hsl(var(--color-primary-800))',
+          '900': 'hsl(var(--color-primary-900))',
+          '950': 'hsl(var(--color-primary-950))',
           foreground: "hsl(var(--primary-foreground))",
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+        danger: {
+          DEFAULT: "hsl(var(--color-danger))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--color-success))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--color-warning))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
