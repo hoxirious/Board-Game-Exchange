@@ -19,18 +19,17 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Image from "next/image"
 import bgeIcon from "../../../public/bgeIcon.svg"
 import stopIcon from "../../../public/stop.svg"
+import "../style.css"
 
 const formSchema = z.object({
-    email: z.string().email({message: "Please enter your email address"}),
-    password: z.string().min(8, {message: "Please enter your password"}).max(50)
+    email: z.string().email({message: "Please enter your email address"})
 })
 
 const page = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
-            password: ""
+            email: ""
         }
     })
 
@@ -43,15 +42,19 @@ const page = () => {
                     alt="Board Game Exchange"
                 />
             </div>
+            <div className="flex flex-col md:items-center">
+                <h1 className="mb-2 text-3xl font-extrabold w-2/3">Reset Your Password</h1>
+                <p className="w-2/3">Enter your email and we will send you a link to reset your password.</p>
+            </div>
             <div>
                 <Alert variant="destructive" className="flex flex-row gap-4 bg-red-100 text-black-100">
                     <div>
                         <Image src={stopIcon} alt="Error"/>
                     </div>
                     <div>
-                        <AlertTitle>Incorrect Credentials</AlertTitle>
+                        <AlertTitle>Cannot Find Account</AlertTitle>
                         <AlertDescription>
-                            Please check your email and password
+                            Please enter an existing email
                         </AlertDescription>
                     </div>
                 </Alert>
@@ -72,26 +75,9 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Password:</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Password" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button type="submit" className="w-full bg-primary-400 hover:bg-primary-500">Log In</Button>
+                        <Button type="submit" className="w-full bg-primary-400 hover:bg-primary-500">Reset Your Password</Button>
                     </form>
                 </Form>
-            </div>
-
-            <div className="flex flex-col items-center">
-                <Link href="/recovery" style={{textDecoration: "underline"}}>Forgot Password?</Link>
             </div>
             <div className="flex flex-col items-center">
                 <p>Don't have an account?</p>
