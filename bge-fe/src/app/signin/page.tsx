@@ -44,7 +44,7 @@ const page = () => {
                 />
             </div>
             <div>
-                <Alert variant="destructive" className="flex flex-row gap-4 bg-red-100 text-black-100">
+                <Alert variant="destructive" className="flex flex-row gap-4 bg-danger-100 text-black-100">
                     <div>
                         <Image src={stopIcon} alt="Error"/>
                     </div>

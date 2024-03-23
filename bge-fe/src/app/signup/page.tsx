@@ -51,7 +51,7 @@ const page = () => {
                 <p className="w-2/3">Type in your email and choose a password and you're good to go.</p>
             </div>
             <div>
-                <Alert variant="destructive" className="flex flex-row gap-4 bg-red-100 text-black-100">
+                <Alert variant="destructive" className="flex flex-row gap-4 bg-danger-100 text-black-100">
                     <div>
                         <Image src={stopIcon} alt="Error"/>
                     </div>
