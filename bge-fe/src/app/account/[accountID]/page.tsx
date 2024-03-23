@@ -1,6 +1,6 @@
 const page = ({ params }: { params: { accountID: string } }) => {
     return (
-        <div>
+        <div className="text-success bg-primary-200">
             Account ID: {params.accountID}
         </div>
     );
