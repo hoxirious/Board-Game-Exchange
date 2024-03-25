@@ -6,7 +6,7 @@ RUN npm i -g pnpm
 WORKDIR /app/be
 
 # Copy the package.json and package-lock.json files to the container
-COPY package.json pnpm-lock.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml nodemon.json tsconfig.json ./
 
 # Install dependencies
 RUN pnpm install

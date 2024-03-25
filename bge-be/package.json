@@ -4,10 +4,11 @@
   "description": "Board Game Exchange",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
     "start": "node build/index.js",
-    "start:docker": "pnpm build && pnpm start"
+    "dev": "nodemon src/index.ts",
+    "start:docker": "pnpm build && pnpm dev"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,10 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.17",
+    "nodemon": "^3.1.0",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }
