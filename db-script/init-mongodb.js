@@ -23,14 +23,13 @@ const messageSchema = {
     validator: {
         $jsonSchema: {
             bsonType: 'object',
-            required: ['timestamp', 'text', 'postId', 'senderUserID', 'receiverUserID', 'senderStatus', 'hasReceiverSeen'],
+            required: ['timestamp', 'text', 'postId', 'senderUserID', 'receiverUserID', 'hasReceiverSeen'],
             properties: {
                 timestamp: { bsonType: 'date' },
                 text: { bsonType: 'string' },
                 postId: { bsonType: 'string' },
                 senderUserID: { bsonType: 'string' },
                 receiverUserID: { bsonType: 'string' },
-                senderStatus: { bsonType: 'string', enum: ['SUCCESS', 'FAILED'] },
                 hasReceiverSeen: { bsonType: 'bool' }
             }
         }
@@ -145,7 +144,6 @@ async function seedUserAndPostsAndMessages() {
             postId: postId,
             senderUserID: userId2,
             receiverUserID: userId1,
-            senderStatus: 'SUCCESS',
             hasReceiverSeen: false
         })
 
@@ -153,9 +151,8 @@ async function seedUserAndPostsAndMessages() {
             timestamp: new Date(Date.now()),
             text: `reply: message ${i}`,
             postId: postId,
-            senderUserID: userId2,
-            receiverUserID: userId1,
-            senderStatus: 'SUCCESS',
+            senderUserID: userId1,
+            receiverUserID: userId2,
             hasReceiverSeen: false
         })
     }

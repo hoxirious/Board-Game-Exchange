@@ -7,13 +7,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const database_service_1 = require("./services/database.service");
-const game_route_1 = require("./routes/game.route");
+const boardgame_route_1 = require("./routes/boardgame.route");
+const post_route_1 = require("./routes/post.route");
+const message_route_1 = require("./routes/message.route");
+const user_route_1 = require("./routes/user.route");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 (0, database_service_1.connectToDatabase)()
     .then(() => {
-    app.use("/games", game_route_1.gamesRouter);
+    app.get('/ping', (_req, res) => {
+        res.send('pong');
+    });
+    app.use("/boardGames", boardgame_route_1.boardGameRouter);
+    app.use("/posts", post_route_1.postRouter);
+    app.use("/messages", message_route_1.messageRouter);
+    app.use("/users", user_route_1.userRouter);
     app.listen(port, () => {
         console.log(`Server started at http://localhost:${port}`);
     });
