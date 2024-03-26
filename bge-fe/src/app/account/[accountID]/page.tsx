@@ -1,6 +1,9 @@
+import NavBar from "@/components/NavBar/NavBar";
+
 const page = ({ params }: { params: { accountID: string } }) => {
     return (
-        <div className="text-success bg-primary-200">
+        <div className="">
+            <NavBar />
             Account ID: {params.accountID}
         </div>
     );
