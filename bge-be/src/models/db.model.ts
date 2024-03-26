@@ -9,8 +9,10 @@ const userSchema = new mongoose.Schema({
     dateCreated: Date,
     location: String,
     fullName: String,
-    profilePictureUrl: String
-});
+    profilePictureUrl: String,
+    isAdmin: Boolean,
+}, {versionKey: false}
+);
 
 // Define schema for Messages Table
 const messageSchema = new mongoose.Schema({
@@ -19,19 +21,19 @@ const messageSchema = new mongoose.Schema({
     postId: String,
     senderUserID: String,
     receiverUserID: String,
-    senderStatus: { type: String, enum: ['SUCCESS', 'FAILED'] },
-    hasReceiverSeen: Boolean
-});
+    hasReceiverSeen: Boolean,
+}, {versionKey: false});
 
 // Define schema for Board Game Categories Table
-const categorySchema = new mongoose.Schema({
+const boardGameSchema = new mongoose.Schema({
     title: String,
-    category: String
-});
+    category: String,
+    image: String,
+}, {versionKey: false});
 
 // Define schema for Posts Table
 const postSchema = new mongoose.Schema({
-    postsPictureUrl: String,
+    postsPictureUrl: [String],
     title: String,
     description: String,
     location: String,
@@ -39,12 +41,12 @@ const postSchema = new mongoose.Schema({
     category: String,
     ownerUserID: String,
     dateCreated: Date
-});
+}, {versionKey: false});
 
 // Initialize models based on the defined schemas
-const User = mongoose.model('User', userSchema);
-const Message = mongoose.model('Message', messageSchema);
-const Category = mongoose.model('Category', categorySchema);
-const Post = mongoose.model('Post', postSchema);
+export const User = mongoose.model('User', userSchema, 'users');
+export const Message = mongoose.model('Message', messageSchema, 'messages');
+export const BoardGame = mongoose.model('BoardGame', boardGameSchema, 'boardGames');
+export const Post = mongoose.model('Post', postSchema, 'posts');
 
 
