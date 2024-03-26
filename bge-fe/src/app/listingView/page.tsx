@@ -20,7 +20,7 @@ const page = () => {
                 </Button>
             </div>
             <ScrollArea className="h-[32.9rem]">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-6 px-4">
                     {listOfGames.map((game) => (
                         <GameCover
                         key={game.name}
