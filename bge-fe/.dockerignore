@@ -1,1 +1,8 @@
 node_modules
+.pnpm-store
+.dockerignore
+.git
+.gitignore
+.next
+out
+public
