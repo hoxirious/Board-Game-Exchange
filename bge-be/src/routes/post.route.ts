@@ -1,10 +1,19 @@
 import express, { Request, Response } from "express";
-import {Post} from "../models/db.model";
+import { Post } from "../models/db.model";
 
 export const postRouter = express.Router();
 
 postRouter.use(express.json());
 
+postRouter.get("/", async (_req: Request, res: Response) => {
+    try {
+        const posts = await Post.find().exec()
+        res.status(200).send(posts);
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(500).send("Posts could not be found");
+    }
+})
 postRouter.get("/search", async (req: Request, res: Response) => {
     const title = req.query.title ? req.query.title : "";
     const location = req.query.location ? req.query.location : "";
