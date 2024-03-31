@@ -19,6 +19,19 @@ const port = process.env.PORT || 8080;
     app.get('/ping', (_req, res) => {
         res.send('pong');
     });
+    app.use(function (req, res, next) {
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+        // Request methods you wish to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        // Request headers you wish to allow
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        // Set to true if you need the website to include cookies in the requests sent
+        // to the API (e.g. in case you use sessions)
+        res.setHeader('Access-Control-Allow-Credentials', 1);
+        // Pass to next layer of middleware
+        next();
+    });
     app.use("/boardGames", boardgame_route_1.boardGameRouter);
     app.use("/posts", post_route_1.postRouter);
     app.use("/messages", message_route_1.messageRouter);
