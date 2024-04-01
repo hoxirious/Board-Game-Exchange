@@ -3,7 +3,7 @@ import MessageBlock, { Message, MessageBlockProps } from "./components/MessageBl
 import Image from "next/image";
 import bgeIcon from "@/../public/bgeIcon.svg";
 import { Input } from "../ui/input";
-import { SendHorizontal } from "lucide-react";
+import { ArrowLeft, ArrowLeftIcon, ChevronLeft, SendHorizontal, StepBackIcon } from "lucide-react";
 
 
 interface ChatPageProps {
@@ -174,7 +174,8 @@ export default function ChatPage({ receiverName, receiverId, location, boardGame
     return (
         <div className="h-full w-full">
             <div className="bg-white h[15dvh]">
-                <div className="grid grid-cols-3 border-b-2 first:border-t-2 p-2 gap-4 border-gray-100 bg-white">
+                <div className="grid grid-cols-4 md:grid-cols-3 border-b-2 items-center first:border-t-2 p-2 gap-4 border-gray-100 bg-white">
+                    <ChevronLeft className="block col-span-1 md:hidden"/>
                     <Image src={bgeIcon} alt="avatar" width={200} className="col-span-1" />
                     <div className="col-span-2 text-left">
                         <div className="text-black">
