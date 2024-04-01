@@ -18,8 +18,6 @@ const page = () => {
 
     return (
         <section className="flex flex-col items-center bg-gray-100">
-            <div className="h-16 w-full bg-gray-400">    
-            </div>
             <div className="flex w-full space-x-2 p-8 md:px-96">
                 <SearchIcon className="w-5 h-5 absolute ml-3.5 mt-2.5 text-primary-200"/>
                 <Input type="search" placeholder="Type a command or search..." className="pr-3 pl-8"/>

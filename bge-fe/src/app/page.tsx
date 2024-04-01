@@ -5,7 +5,7 @@ import bgeLogo from "@/../../public/bgeIcon.svg"
 export default function Home() {
     return (
          <main className="h-screen bg-white flex flex-col">
-            <div className="grid grid-cols-1 grid-rows-4 mt-10 gap-4 grow bg-black p-4 md:grid-cols-2 md:px-32 md:relative md:grid-rows-2" >
+            <div className="grid grid-cols-1 grid-rows-4 gap-4 grow bg-black p-4 md:grid-cols-2 md:px-32 md:relative md:grid-rows-2" >
                 <div className="flex flex-col justify-center items-center gap-y-4 row-span-1 md:items-start md:justify-start md:pt-10">
                     <p className="text-white text-xl font-bold md:text-4xl md:max-w-56">
                         Sharing is Caring!

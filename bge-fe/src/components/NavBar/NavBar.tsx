@@ -131,6 +131,9 @@ const NavBar = () => {
     let navBarVariant = homeNavBarList;
     // TODO: Implement navBarVariant based on user authentication status
     const pathName = usePathname();
+    // temporary? just for ui implementation
+    if(pathName === "/signup" || pathName === "/signin" || pathName === "/recovery")
+        return;
     if (pathName === "/home") {
         navBarVariant = homeNavBarList;
     } else if (pathName && pathName.includes("/item")) {
