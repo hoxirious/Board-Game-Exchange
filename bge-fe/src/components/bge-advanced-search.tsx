@@ -1,5 +1,7 @@
 'use client'
 
+import { boardGameCategories } from '@/app/schema/boardGame'
+
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useRef } from 'react'
 
@@ -25,42 +27,6 @@ const QUERY_TITLES = {
   owned_board_games: "What do you own?",
   location: "Where are you?"
 }
-
-interface BoardGameGenre {
-  name: string
-  src: string
-}
- 
-const genres: BoardGameGenre[] = [
-  {
-    name: "Adventure",
-    src: "/assets/images/board-game-categories/adventure.jpg"
-  },
-  {
-    name: "Bluffing",
-    src: "/assets/images/board-game-categories/bluffing.jpg"
-  },
-  {
-    name: "Card Game",
-    src: "/assets/images/board-game-categories/cardgame.jpg"
-  },
-  {
-    name: "Civilization",
-    src: "/assets/images/board-game-categories/civilization.jpg"
-  },
-  {
-    name: "Economic",
-    src: "/assets/images/board-game-categories/economic.jpg"
-  },
-  {
-    name: "Exploration",
-    src: "/assets/images/board-game-categories/exploration.jpg"
-  },
-  {
-    name: "Fantasy",
-    src: "/assets/images/board-game-categories/fantasy.jpg"
-  }
-]
 
 function SuggestionsList({data, className, onSelect}) {
   if(!data) {
@@ -188,20 +154,20 @@ function CategorySelect({query, onSelect}) {
   return (
     <ScrollArea className="w-full whitespace-nowrap rounded-md border">
       <fieldset className="flex w-full space-x-4 p-4">
-        {genres.map((genre) => (
-          <div key={genre.name}>
-            <input id={genre.name} type="radio" value={genre.name} name="genre" className="inline-block peer hidden" onChange={(e) => onSelect(e.target.value)} checked={query.board_game_genre === genre.name}/>
+        {boardGameCategories.map((category) => (
+          <div key={category.name}>
+            <input id={category.name} type="radio" value={category.name} name="category" className="inline-block peer hidden" onChange={(e) => onSelect(e.target.value)} checked={query.board_game_category === category.name}/>
             {/* Bug: on mobile, not turning blue when selected */}
-            <label htmlFor={genre.name} className="w-24 h-24 inline-block shrink-0 bg-black-900 border-2 border-transparent peer-checked:border-primary rounded-md overflow-hidden">
+            <label htmlFor={category.name} className="w-24 h-24 inline-block shrink-0 bg-black-900 border-2 border-transparent peer-checked:border-primary rounded-md overflow-hidden">
               <Image
-                alt={genre.name}
+                alt={category.name}
                 width={72}
                 height={72}
-                src={genre.src}
+                src={category.src}
                 className="h-fit w-fit object-cover"
               />
             </label>
-            <figcaption className="text-sm">{genre.name}</figcaption>
+            <figcaption className="text-sm">{category.name}</figcaption>
           </div>
         ))}
       </fieldset>
@@ -375,7 +341,7 @@ function BGEAdvancedSearchComponent({onSearch}) {
 
   const initialQuery = {
     board_games: '',
-    board_game_genre: '',
+    board_game_category: '',
     owned_board_games: '',
     location: ''
   };
@@ -425,9 +391,9 @@ function BGEAdvancedSearchComponent({onSearch}) {
     }));
   }
 
-  function setGenre(genre) {
+  function setCategory(category) {
     const newQuery = structuredClone(query);
-    newQuery.board_game_genre = genre;
+    newQuery.board_game_category = category;
     setQuery(query => ({
       ...newQuery
     }));
@@ -464,14 +430,14 @@ function BGEAdvancedSearchComponent({onSearch}) {
             : <SearchQueryForm 
               query={query} 
               onSearch={ (e : Event, title : string, placeholder : string) => showSuggestionsPage(e, title, placeholder) }
-              onSelectCategory={setGenre}/> 
+              onSelectCategory={setCategory}/> 
           }
           </div>
           <div className="hidden md:block z-30">
             <SearchQueryFormDesktop
                 query={query} 
                 onSave={(field, value) => setSuggestion(field, value)}
-                onSelectCategory={setGenre}/> 
+                onSelectCategory={setCategory}/> 
           </div>
         </CardContent>
         <div className="block md:hidden z-10 relative">
