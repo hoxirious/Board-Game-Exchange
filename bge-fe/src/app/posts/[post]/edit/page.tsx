@@ -1,9 +1,10 @@
 "use client"
 
-import { boardGameCategories, boardGameConditions } from "@/app/schema/boardGame"
-
 import { Button } from "@/components/ui/button"
-import { ImagePlus, PackageSearch, LayoutGrid } from 'lucide-react'
+import { ImagePlus, PackageSearch, LayoutGrid, X } from 'lucide-react'
+import { Label } from "@/components/ui/label"
+import useSWR from 'swr'
+import { useEffect } from 'react'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -27,6 +28,9 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 
+import Image from 'next/image'
+import { boardGameCategories, boardGameConditions } from "@/app/schema/boardGame"
+
 
 const rules = {
     title : {
@@ -46,11 +50,16 @@ const formSchema = z.object({
         .max(rules.description.max, { message: "Description cannot be more than 512 characters." }),
     condition: z.string()
         .min(1, { message: "Please select a condition." }),
+    location: z.string(),
     category: z.string()
         .min(1, { message: "Please select a category." })
 });
 
-const page = () => {
+const page = ({ params }: { params: { post: string } }) => {
+    const fetcher = (url) => fetch(url).then(res => res.json());
+
+    const { data, error, isLoading } = useSWR(`http://localhost:8080/posts/${params.post}`, fetcher);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -71,14 +80,25 @@ const page = () => {
         console.log(values)
     }
 
+    useEffect(() => {
+        console.log(data);
+        form.reset(data);
+    }, [data]);
+
+    if(isLoading) {
+        return (
+            <div>Loading</div>
+        );
+    }
+
     return (
         <main className="p-4">
-            <h1 className="border-b-2 font-semibold text-4xl mb-8">Create a New Post</h1>
+            <h1 className="border-b-2 font-semibold text-4xl mb-8 mx-auto"><div className="max-w-full truncate">Edit Post - {data.title}</div></h1>
             <div className="lg:max-w-screen-lg md:max-w-screen-md md:mx-auto md:grid md:grid-cols-2 md:gap-4">
                 <section>
                     <div className="flex justify-between items-end">
                         <h2 className="text-xl font-semibold">Photos</h2>
-                        <span className="text-sm">0/10</span>
+                        <span className="text-sm">{data.postsPictureUrl.length}/10</span>
                     </div>
                     {/* Photo uploader */}
                     {/* TODO: implement this :) */}
@@ -96,6 +116,28 @@ const page = () => {
                             <Button>Browse Photos</Button>
                         </div>
                     </div>
+                    <div className="grid grid-cols-5 grid-rows-2 gap-4 my-4">
+                        {/* Thumbnail */}
+                        {data.postsPictureUrl.map((pictureUrl, index) => (
+                            <Label key={index} htmlFor={`post-picture-${index}`} className="rounded relative overflow-hidden aspect-square items-center">
+                                <Image 
+                                    className="align-middle w-full"
+                                    src={pictureUrl}
+                                    width={80}
+                                    height={80}
+                                    alt="board game picture"></Image>
+                                {/* TODO: existing pictures must be selected on load */}
+                                <Button 
+                                    id={`post-picture-${index}`}
+                                    value={pictureUrl}
+                                    name="post_pictures"
+                                    type="button" variant="outline" className="absolute top-1 right-1 rounded-full p-0 h-6 w-6 text-danger hover:text-danger">
+                                    <X className="w-3 aspect-square"/>
+                                </Button>
+                            </Label>
+                        ))}
+                        
+                    </div>
                 </section>
                 <section className="post-details">
                     <Form {...form}>
@@ -106,14 +148,14 @@ const page = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="flex justify-between items-end">
-                                        <h2 className="text-xl font-semibold">Title</h2>
+                                        <h2 className="text-xl font-semibold">Title </h2>
                                         <span>
                                             {form.getValues().title.length}/
                                             { rules.title.max }
                                         </span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Type your title here" {...field} />
+                                        <Input placeholder="Type your title here" {...field}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -165,7 +207,7 @@ const page = () => {
                                             <PackageSearch />
                                             <span>Condition</span>
                                         </FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select name={field.name} onChange={field.onChange} onBlur={field.onBlur} defaultValue={field.value}>
                                             <FormControl>
                                                 <div className="flex-grow">
                                                     <SelectTrigger>
@@ -192,7 +234,8 @@ const page = () => {
                                                 <LayoutGrid/>
                                                 <span>Category</span>
                                             </FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            {/* BUG: Select not working with form.reset */}
+                                            <Select name={field.name} onChange={field.onChange} onBlur={field.onBlur} defaultValue={field.value}>
                                                 <FormControl>
                                                     <div className="flex-grow">
                                                         <SelectTrigger>
@@ -202,7 +245,7 @@ const page = () => {
                                                 </FormControl>
                                                 <SelectContent>
                                                     {boardGameCategories.map((category) => (
-                                                        <SelectItem value={category.name} key={category.name}>{category.name}</SelectItem>
+                                                        <SelectItem value={category.name}>{category.name}</SelectItem>
                                                     ))}
                                                 </SelectContent>
                                             </Select>
@@ -214,7 +257,7 @@ const page = () => {
                             <div className="flex justify-between py-4">
                                 {/* TODO: implement cancel */}
                                 <Button variant="outline" type="button" className="px-12">Cancel</Button>
-                                <Button type="submit" className="px-12">Post</Button>
+                                <Button type="submit" className="px-12">Save</Button>
                             </div>
                         </form>
                     </Form>
