@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 
+import { listOfGames } from "@/app/listingView/data/games";
+
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     Credenza,
     CredenzaBody,
@@ -16,6 +19,8 @@ import {
     CredenzaTitle,
     CredenzaTrigger,
   } from "@/components/Credenza/credenza";
+
+import { GameCover } from "@/components/gameCover";
   
 
 import NavBar from "@/components/NavBar/NavBar";
@@ -115,18 +120,32 @@ const page = ({ params }: { params: { accountID: string } }) => {
     )
 
     return (
-        <div className="">
-            <AccountInfo accountID={params.accountID} setIsSheetOpen={setIsSheetOpen}/>
-            Account ID: {params.accountID}
-            <Credenza open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <CredenzaContent>
-                <CredenzaBody>
-                  {settingsModal}
-                </CredenzaBody>
-              </CredenzaContent>
-            </Credenza>
+        <div className="flex flex-col h-screen">
+            <div>
+                <AccountInfo accountID={params.accountID} setIsSheetOpen={setIsSheetOpen}/>
+                <div>
+                    <Credenza open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                      <CredenzaContent>
+                        <CredenzaBody>
+                          {settingsModal}
+                        </CredenzaBody>
+                      </CredenzaContent>
+                    </Credenza>
+                </div>
+            </div>
+            <ScrollArea className="flex-grow mt-4 max-w-screen-md m-auto">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-6 px-4">
+                    {listOfGames.map((game) => (
+                        <GameCover
+                        key={game.name}
+                        game={game}
+                        className=""
+                        />
+                    ))}
+                </div>
+            </ScrollArea>
         </div>
-    );
+    )
 }
 
 export default page;
