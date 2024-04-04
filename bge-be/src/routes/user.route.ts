@@ -6,6 +6,18 @@ export const userRouter = express.Router();
 userRouter.use(express.json());
 
 userRouter.get("/:id", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.responses[200] = {
+        description: 'Successfully got a specific user',
+        schema: { $ref: "#/components/schemas/UserResponse" }
+     },
+     #swagger.responses[404] = {
+        description: 'Failed to get a specific user',
+        schema: { msg: 'User with id does not exist' }
+     }
+     */
+
     const id = req?.params?.id;
 
     try {
@@ -13,23 +25,63 @@ userRouter.get("/:id", async (req: Request, res: Response) => {
         res.status(200).send(user);
     } catch (error: any) {
         console.error(error.message);
-        res.status(404).send(`User with id ${id} does not exist`);
+        res.status(404).send({msg: `User with id ${id} does not exist`});
     }
 })
 
 userRouter.post("/", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.requestBody = {
+         required: true,
+         schema: { $ref: "#/components/schemas/UserRequest" }
+     },
+     #swagger.responses[201] = {
+         description: 'Successfully created a user',
+         schema: { $ref: "#/components/schemas/UserResponse" }
+     },
+     #swagger.responses[500] = {
+         description: 'Failed to create a user',
+         schema: { msg: 'Failed to create a new user' }
+     },
+     #swagger.responses[400] = {
+         description: 'Failed to create a user',
+         schema: { msg: 'Failed to create a new user' }
+     }
+     */
+
     try {
         const result = await User.create(req.body);
         result
             ? res.status(201).send(result)
-            : res.status(500).send("Failed to create a new user.");
+            : res.status(500).send({msg: "Failed to create a new user"});
     } catch (error: any) {
         console.error(error.message);
-        res.status(400).send("Failed to create a new user.");
+        res.status(400).send({msg: "Failed to create a new user"});
     }
 })
 
 userRouter.put("/:id", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.requestBody = {
+         description: 'The request body for the update does not need all fields to update the user',
+         schema: { $ref: "#/components/schemas/UserRequest" }
+     },
+     #swagger.responses[200] = {
+         description: 'Successfully updated a user',
+         schema: { $ref: "#/components/schemas/UserResponse" }
+     },
+     #swagger.responses[304] = {
+         description: 'Failed to update a user',
+         schema: { msg: 'User with id: id not updated' }
+     },
+     #swagger.responses[400] = {
+         description: 'Failed to update a user',
+         schema: { msg: 'User with id: id not updated' }
+     }
+     */
+
     const id = req?.params?.id;
 
     try {
@@ -38,23 +90,39 @@ userRouter.put("/:id", async (req: Request, res: Response) => {
 
         result
             ? res.status(200).send(result)
-            : res.status(304).send(`User with id: ${id} not updated`);
+            : res.status(304).send({msg: `User with id: ${id} not updated`});
     } catch (error: any) {
         console.error(error.message);
-        res.status(400).send(`User with id: ${id} not updated`);
+        res.status(400).send({msg: `User with id: ${id} not updated`});
     }
 })
 
 userRouter.delete("/:id", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.responses[202] = {
+         description: 'Successfully deleted a user',
+         schema: { $ref: "#/components/schemas/UserResponse" }
+     },
+     #swagger.responses[400] = {
+         description: 'Failed to delete a user',
+         schema: { msg: 'Failed to remove user with id' }
+     },
+     #swagger.responses[404] = {
+         description: 'Failed to delete a user',
+         schema: { msg: 'User with id does not exist' }
+     }
+     */
+
     const id = req?.params?.id;
 
     try {
         const result = await User.findByIdAndDelete(id)
         result
             ? res.status(202).send(result)
-            : res.status(400).send(`Failed to remove user with id ${id}`);
+            : res.status(400).send({msg: `Failed to remove user with id ${id}`});
     } catch (error: any) {
         console.error(error.message);
-        res.status(404).send(`User with id ${id} does not exist`);
+        res.status(404).send({msg: `User with id ${id} does not exist`});
     }
 });

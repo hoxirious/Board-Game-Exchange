@@ -4,19 +4,26 @@ import dotenv from "dotenv";
 import { connectToDatabase } from "./services/database.service"
 import { boardGameRouter } from "./routes/boardgame.route";
 import { postRouter } from "./routes/post.route";
-import {messageRouter} from "./routes/message.route";
-import {userRouter} from "./routes/user.route";
+import { messageRouter } from "./routes/message.route";
+import { userRouter } from "./routes/user.route";
+import swaggerUi from "swagger-ui-express";
+import swaggerOutput from "./swagger_output.json";
+import * as bodyParser from "body-parser";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 8080;
 
+app.use(bodyParser.json());
+
 connectToDatabase()
     .then(() => {
         app.get('/ping', (_req: Request, res: Response) => {
             res.send('pong');
         });
+
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
         app.use(function (req: Request, res: Response, next) {
 
