@@ -22,10 +22,35 @@ userRouter.get("/:id", async (req: Request, res: Response) => {
 
     try {
         const user = await User.findById(id).exec()
-        res.status(200).send(user);
+        user ? res.status(200).send(user) : res.status(404).send({msg: `User with id ${id} does not exist`});
     } catch (error: any) {
         console.error(error.message);
         res.status(404).send({msg: `User with id ${id} does not exist`});
+    }
+})
+
+userRouter.get("/get/:email", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.responses[200] = {
+     description: 'Successfully got a specific user by email',
+     schema: { $ref: "#/components/schemas/UserResponse" }
+     },
+     #swagger.responses[404] = {
+     description: 'Failed to get a specific user by email',
+     schema: { msg: 'User with id does not exist' }
+     }
+     */
+
+    const email = req?.params?.email;
+
+    try {
+        const user= await User.findOne({'email': email}).exec();
+        user ? res.status(200).send(user) : res.status(404).send({msg: `User with email ${email} does not exist`});
+
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(404).send({msg: `User with email ${email} does not exist`});
     }
 })
 
@@ -46,7 +71,7 @@ userRouter.post("/", async (req: Request, res: Response) => {
      },
      #swagger.responses[400] = {
          description: 'Failed to create a user',
-         schema: { msg: 'Failed to create a new user' }
+         schema: { msg: 'User already exists with same username or email' }
      }
      */
 
@@ -57,7 +82,7 @@ userRouter.post("/", async (req: Request, res: Response) => {
             : res.status(500).send({msg: "Failed to create a new user"});
     } catch (error: any) {
         console.error(error.message);
-        res.status(400).send({msg: "Failed to create a new user"});
+        res.status(400).send({msg: "User already exists with same username or email"});
     }
 })
 
@@ -78,7 +103,7 @@ userRouter.put("/:id", async (req: Request, res: Response) => {
      },
      #swagger.responses[400] = {
          description: 'Failed to update a user',
-         schema: { msg: 'User with id: id not updated' }
+         schema: { msg: 'User already exists with same username or email' }
      }
      */
 
@@ -93,7 +118,7 @@ userRouter.put("/:id", async (req: Request, res: Response) => {
             : res.status(304).send({msg: `User with id: ${id} not updated`});
     } catch (error: any) {
         console.error(error.message);
-        res.status(400).send({msg: `User with id: ${id} not updated`});
+        res.status(400).send({msg: `User already exists with same username or email`});
     }
 })
 

@@ -1119,7 +1119,7 @@
                   "properties": {
                     "msg": {
                       "type": "string",
-                      "example": "User with id: id not updated"
+                      "example": "User already exists with same username or email"
                     }
                   },
                   "xml": {
@@ -1133,7 +1133,7 @@
                   "properties": {
                     "msg": {
                       "type": "string",
-                      "example": "User with id: id not updated"
+                      "example": "User already exists with same username or email"
                     }
                   },
                   "xml": {
@@ -1260,6 +1260,74 @@
         }
       }
     },
+    "/users/get/{email}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully got a specific user by email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to get a specific user by email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "User with id does not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "User with id does not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/": {
       "post": {
         "tags": [
@@ -1291,7 +1359,7 @@
                   "properties": {
                     "msg": {
                       "type": "string",
-                      "example": "Failed to create a new user"
+                      "example": "User already exists with same username or email"
                     }
                   },
                   "xml": {
@@ -1305,7 +1373,7 @@
                   "properties": {
                     "msg": {
                       "type": "string",
-                      "example": "Failed to create a new user"
+                      "example": "User already exists with same username or email"
                     }
                   },
                   "xml": {
