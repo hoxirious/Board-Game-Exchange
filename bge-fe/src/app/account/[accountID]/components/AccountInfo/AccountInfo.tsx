@@ -7,11 +7,11 @@ import { Filter, Settings } from "lucide-react";
 
 import "./AccountInfo.scss";
 
-const AccountInfo = ({ accountID }: { accountID: string }) => {
+const AccountInfo = ({ accountID, setIsSheetOpen }: { accountID: string, setIsSheetOpen: Function }) => {
     const actionButtonsSelf =  (
         <div className="account-action-btns flex gap-4 mx-4">
             <Button className="bg-primary text-white basis-5/6" >Create a Listing</Button>
-            <Button className="bg-gray-100 basis-1/6" variant="outline" size="icon">
+            <Button className="bg-gray-100 basis-1/6" variant="outline" size="icon" onClick={() => setIsSheetOpen(true)}>
                 <Settings className="h-4 w-4" />
             </Button>
         </div>

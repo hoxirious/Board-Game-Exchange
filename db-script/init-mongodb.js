@@ -85,6 +85,9 @@ async function init() {
             createCollectionWithValidator(db, 'posts', postSchema)
         ]);
 
+        db.getCollection('users').createIndex({ username: 1 }, { unique: true });
+        db.getCollection('users').createIndex({ email: 1 }, { unique: true });
+
     } catch (err) {
         console.error('Initialization failed:', err);
         process.exit(1);
