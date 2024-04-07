@@ -6,7 +6,7 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'cf.geekdo-images.com',
                 port: '',
-                pathname: '/original/img/**',
+                pathname: '/**',
             }
         ]
     }
