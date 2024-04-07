@@ -1579,43 +1579,46 @@
         }
       },
       "MessageList": {
-        "type": "object",
-        "properties": {
-          "660df3829689aaa534db83b2 (postId)": {
-            "type": "object",
-            "properties": {
-              "660df3819689aaa534db83b0 (otherUserId)": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "example": "660df3829689aaa534db83c2"
-                    },
-                    "timestamp": {
-                      "type": "string",
-                      "example": "2024-04-04T00:25:38.138Z"
-                    },
-                    "text": {
-                      "type": "string",
-                      "example": "first: message 4"
-                    },
-                    "postId": {
-                      "type": "string",
-                      "example": "660df3829689aaa534db83b2"
-                    },
-                    "senderUserID": {
-                      "type": "string",
-                      "example": "660df3819689aaa534db83b1"
-                    },
-                    "receiverUserID": {
-                      "type": "string",
-                      "example": "660df3819689aaa534db83b0"
-                    },
-                    "hasReceiverSeen": {
-                      "type": "boolean",
-                      "example": false
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "660df3829689aaa534db83b2 (postId)": {
+              "type": "object",
+              "properties": {
+                "660df3819689aaa534db83b0 (otherUserId)": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "660df3829689aaa534db83c2"
+                      },
+                      "timestamp": {
+                        "type": "string",
+                        "example": "2024-04-04T00:25:38.138Z"
+                      },
+                      "text": {
+                        "type": "string",
+                        "example": "first: message 4"
+                      },
+                      "postId": {
+                        "type": "string",
+                        "example": "660df3829689aaa534db83b2"
+                      },
+                      "senderUserID": {
+                        "type": "string",
+                        "example": "660df3819689aaa534db83b1"
+                      },
+                      "receiverUserID": {
+                        "type": "string",
+                        "example": "660df3819689aaa534db83b0"
+                      },
+                      "hasReceiverSeen": {
+                        "type": "boolean",
+                        "example": false
+                      }
                     }
                   }
                 }

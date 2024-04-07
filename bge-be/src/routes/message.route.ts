@@ -51,7 +51,7 @@ messageRouter.get("/:userId", async (req: Request, res: Response) => {
             }
         });
 
-        res.status(200).send(groupedMessages);
+        res.status(200).send([groupedMessages]);
     } catch (error: any) {
         console.error(error.message);
         res.status(404).send({msg: `Messages for userID ${userId} do not exist`});
