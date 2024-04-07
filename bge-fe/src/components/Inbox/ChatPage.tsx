@@ -1,9 +1,12 @@
 'use client';
-import MessageBlock, { Message, MessageBlockProps } from "./components/MessageBlock";
+import MessageBlock, { MessageBlockProps } from "./components/MessageBlock";
 import Image from "next/image";
 import bgeIcon from "@/../public/bgeIcon.svg";
 import { Input } from "../ui/input";
 import { ArrowLeft, ArrowLeftIcon, ChevronLeft, SendHorizontal, StepBackIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getUserMessages } from "@/endpoints/inbox.endpoint";
+import { Message, PostMessage } from "@/app/schema/message";
 
 
 interface ChatPageProps {
@@ -15,161 +18,20 @@ interface ChatPageProps {
 
 export default function ChatPage({ receiverName, receiverId, location, boardGameName }: ChatPageProps) {
 
-    const messages: MessageBlockProps[] = [
-        {
-            message: {
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        }, {
-            message: {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [userId, setUserId] = useState<string>('661222f06e33e2de2ddb83b0');
+    const [postId, setPostId] = useState<string>('661222f06e33e2de2ddb83b2');
+    const [externalUserId, setExternalUserId] = useState<string>('661222f06e33e2de2ddb83b1')
 
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        },
-        {
-            message: {
-
-                content: "Hello I am a very long text. If you see this, this mean it works. but if you dont see this it does mean it doesnt work ok?",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        }, {
-            message: {
-
-                content: "Hello Imagine this is a very long text. If you see this, this mean it works. but if you dont see this it does mean it doesnt work ok?",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        }, {
-            message: {
-
-                content: "Hello Imagine this is a very long text. If you see this, this mean it works. but if you dont see this it does mean it doesnt work ok?",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "sender"
-        }, {
-            message: {
-
-                content: "Hello",
-                time: "12:00",
-                senderName: "John Doe",
-                senderId: "1"
-            },
-            messageType: "receiver"
-        },]
+    useEffect(() => {
+        const fetchItems = async () => {
+            const res = await getUserMessages('661222f06e33e2de2ddb83b0');
+            if (res) {
+                setMessages(res[postId][externalUserId]);
+            }
+        }
+        fetchItems();
+    }, []);
 
     return (
         <div className="h-full w-full">
@@ -189,9 +51,18 @@ export default function ChatPage({ receiverName, receiverId, location, boardGame
 
             <div className="grid h-[80dvh] overflow-y-auto px-2">
                 {
-                    messages.map((message, index) => {
+                    messages && messages.length > 0 && messages.map((message, index) => {
+
+                        console.log(messages);
                         return (
-                            <MessageBlock key={`${JSON.stringify(message)}_${index}_${new Date().getTime()}`} messageType={message.messageType} message={message.message} />
+                            <MessageBlock key={`${JSON.stringify(message)}_${index}_${message.timestamp}`}
+                                messageType={message.senderUserID == userId ? 'sender' : 'receiver'}
+                                message={{
+                                    content: message.text,
+                                    time: message.timestamp.toString(),
+                                    senderName: message.senderUserID,
+                                    senderId: message.senderUserID
+                                }} />
                         )
                     })
                 }

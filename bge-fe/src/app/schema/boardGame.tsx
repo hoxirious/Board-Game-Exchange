@@ -2,7 +2,7 @@ export interface BoardGameCategory {
     name: string
     src: string
   }
-   
+
 export const boardGameCategories: BoardGameCategory[] = [
     {
         name: "Adventure",
@@ -67,4 +67,5 @@ export const boardGameConditions: BoardGameCondition[] = [
         name: 'Used - Poor'
     }
 ]
-  
+
+
