@@ -1,5 +1,7 @@
 'use client'
 
+import { boardGameCategories } from '@/app/schema/boardGame'
+
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useRef } from 'react'
 
@@ -27,55 +29,19 @@ const QUERY_TITLES = {
     location: "Where are you?"
 }
 
-interface BoardGameGenre {
-    name: string
-    src: string
-}
-
-const genres: BoardGameGenre[] = [
-    {
-        name: "Adventure",
-        src: "/assets/images/board-game-categories/adventure.jpg"
-    },
-    {
-        name: "Bluffing",
-        src: "/assets/images/board-game-categories/bluffing.jpg"
-    },
-    {
-        name: "Card Game",
-        src: "/assets/images/board-game-categories/cardgame.jpg"
-    },
-    {
-        name: "Civilization",
-        src: "/assets/images/board-game-categories/civilization.jpg"
-    },
-    {
-        name: "Economic",
-        src: "/assets/images/board-game-categories/economic.jpg"
-    },
-    {
-        name: "Exploration",
-        src: "/assets/images/board-game-categories/exploration.jpg"
-    },
-    {
-        name: "Fantasy",
-        src: "/assets/images/board-game-categories/fantasy.jpg"
-    }
-]
-
-function SuggestionsList({ data, className, onSelect }) {
-    if (!data) {
-        return (
-            <div className={className}>
-                <span className="block p-8 text-center">Loading...</span>
-            </div>
-        )
-    }
-
-    if (data != null) {
-        return (
-            <div className={className}>
-                {/*
+function SuggestionsList({data, className, onSelect}) {
+  if(!data) {
+    return (
+      <div className={className}>
+        <span className="block p-8 text-center">Loading...</span>
+      </div>
+    )
+  }
+  
+  if (data != null) {
+    return (
+      <div className={className}>
+        {/* 
           We're using buttons here so that e.relatedTarget (when Input from
           SearchInput is blurred) is set to one of the buttons below.
          */}
@@ -185,30 +151,30 @@ function SuggestionsDisplay({ title, placeholder, givenSuggestion, onExit }) {
     );
 }
 
-function CategorySelect({ query, onSelect }) {
-    return (
-        <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-            <fieldset className="flex w-full space-x-4 p-4">
-                {genres.map((genre) => (
-                    <div key={genre.name}>
-                        <input id={genre.name} type="radio" value={genre.name} name="genre" className="inline-block peer hidden" onChange={(e) => onSelect(e.target.value)} checked={query.board_game_genre === genre.name} />
-                        {/* Bug: on mobile, not turning blue when selected */}
-                        <label htmlFor={genre.name} className="w-24 h-24 inline-block shrink-0 bg-black-900 border-2 border-transparent peer-checked:border-primary rounded-md overflow-hidden">
-                            <Image
-                                alt={genre.name}
-                                width={72}
-                                height={72}
-                                src={genre.src}
-                                className="h-fit w-fit object-cover"
-                            />
-                        </label>
-                        <figcaption className="text-sm">{genre.name}</figcaption>
-                    </div>
-                ))}
-            </fieldset>
-            <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-    );
+function CategorySelect({query, onSelect}) {
+  return (
+    <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+      <fieldset className="flex w-full space-x-4 p-4">
+        {boardGameCategories.map((category) => (
+          <div key={category.name}>
+            <input id={category.name} type="radio" value={category.name} name="category" className="inline-block peer hidden" onChange={(e) => onSelect(e.target.value)} checked={query.board_game_category === category.name}/>
+            {/* Bug: on mobile, not turning blue when selected */}
+            <label htmlFor={category.name} className="w-24 h-24 inline-block shrink-0 bg-black-900 border-2 border-transparent peer-checked:border-primary rounded-md overflow-hidden">
+              <Image
+                alt={category.name}
+                width={72}
+                height={72}
+                src={category.src}
+                className="h-fit w-fit object-cover"
+              />
+            </label>
+            <figcaption className="text-sm">{category.name}</figcaption>
+          </div>
+        ))}
+      </fieldset>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
+  );
 }
 
 // TODO: make multiple select
@@ -361,18 +327,74 @@ const Footer = ({ onClear, onSearch }) => (
 
 // This is the search component.
 // the onSearch event is given the query.
-function BGEAdvancedSearchComponent({ onSearch }) {
-    interface suggestionsPageInterface {
-        title: string,
-        placeholder: string,
-        display: boolean
+function BGEAdvancedSearchComponent({onSearch}) {
+  interface suggestionsPageInterface {
+    title: string,
+    placeholder: string,
+    display: boolean
+  }
+
+  const initialSuggestionsPage : suggestionsPageInterface = {
+    title: 'WHat',
+    placeholder: 'What',
+    display: false
+  };
+
+  const initialQuery = {
+    board_games: '',
+    board_game_category: '',
+    owned_board_games: '',
+    location: ''
+  };
+
+  const [suggestionsPage, setSuggestionsPage] = useState(initialSuggestionsPage);
+  const [query, setQuery] = useState(initialQuery);
+  
+  // for debugging query :)
+  useEffect(() => {
+    console.log(query);
+  }, [query]);
+
+  function showSuggestionsPage(e : Event, title : string, placeholder : string) {
+    setSuggestionsPage({
+      title: title,
+      placeholder: placeholder,
+      display: true
+    });
+  }
+
+  function hideSuggestionsPage() {
+    setSuggestionsPage(initialSuggestionsPage);
+  }
+
+  // hide the suggestion page, grab the value, and put it in the query
+  function setSuggestion(suggestionType, suggestion) {
+    hideSuggestionsPage();
+    const newQuery = structuredClone(query);
+    switch (suggestionType) {
+      case QUERY_TITLES.board_games:
+        newQuery.board_games = suggestion;
+        break;
+
+      case QUERY_TITLES.owned_board_games:
+        newQuery.owned_board_games = suggestion;
+        break;
+
+      case QUERY_TITLES.location:
+        newQuery.location = suggestion;
+        break;
+    
+      default:
+        break;
     }
 
-    const initialSuggestionsPage: suggestionsPageInterface = {
-        title: 'WHat',
-        placeholder: 'What',
-        display: false
-    };
+  function setCategory(category) {
+    const newQuery = structuredClone(query);
+    newQuery.board_game_category = category;
+    setQuery(query => ({
+      ...newQuery
+    }));
+  }
 
     const initialQuery = {
         board_games: '',
@@ -381,109 +403,50 @@ function BGEAdvancedSearchComponent({ onSearch }) {
         location: ''
     };
 
-    const [suggestionsPage, setSuggestionsPage] = useState(initialSuggestionsPage);
-    const [query, setQuery] = useState(initialQuery);
-
-    // for debugging query :)
-    useEffect(() => {
-        console.log(query);
-    }, [query]);
-
-    function showSuggestionsPage(e: Event, title: string, placeholder: string) {
-        setSuggestionsPage({
-            title: title,
-            placeholder: placeholder,
-            display: true
-        });
-    }
-
-    function hideSuggestionsPage() {
-        setSuggestionsPage(initialSuggestionsPage);
-    }
-
-    // hide the suggestion page, grab the value, and put it in the query
-    function setSuggestion(suggestionType, suggestion) {
-        hideSuggestionsPage();
-        const newQuery = structuredClone(query);
-        switch (suggestionType) {
-            case QUERY_TITLES.board_games:
-                newQuery.board_games = suggestion;
-                break;
-
-            case QUERY_TITLES.owned_board_games:
-                newQuery.owned_board_games = suggestion;
-                break;
-
-            case QUERY_TITLES.location:
-                newQuery.location = suggestion;
-                break;
-
-            default:
-                break;
-        }
-        setQuery(query => ({
-            ...newQuery
-        }));
-    }
-
-    function setGenre(genre) {
-        const newQuery = structuredClone(query);
-        newQuery.board_game_genre = genre;
-        setQuery(query => ({
-            ...newQuery
-        }));
-    }
-
-    function clearQuery() {
-        setQuery(query => ({
-            ...initialQuery
-        }));
-    }
-
-    return (
-        <main>
-            <Card className="flex flex-col justify-between h-[calc(100dvh)] bg-gray-100 w-full rounded-none md:h-fit z-10">
-                <CardHeader className="flex-none">
-                    <section className="flex justify-between">
-                        <div>
-                            <CardTitle className="text-xl">Listings Search</CardTitle>
-                            <CardDescription>Look for board games.</CardDescription>
-                        </div>
-                        <div>
-                            {suggestionsPage.display ? <Button variant="ghost" onClick={hideSuggestionsPage}>go back</Button> : <Button variant="ghost">close</Button>}
-                        </div>
-                    </section>
-                </CardHeader>
-                <CardContent className="h-full overflow-y-auto md:overflow-y-visible">
-                    <div className="block md:hidden h-full">
-                        {suggestionsPage.display ?
-                            <SuggestionsDisplay
-                                title={suggestionsPage.title}
-                                givenSuggestion={query[Object.keys(QUERY_TITLES).find(key => QUERY_TITLES[key] === suggestionsPage.title)]}
-                                placeholder={suggestionsPage.placeholder}
-                                onExit={(value) => setSuggestion(suggestionsPage.title, value)} />
-                            : <SearchQueryForm
-                                query={query}
-                                onSearch={(e: Event, title: string, placeholder: string) => showSuggestionsPage(e, title, placeholder)}
-                                onSelectCategory={setGenre} />
-                        }
-                    </div>
-                    <div className="hidden md:block z-30">
-                        <SearchQueryFormDesktop
-                            query={query}
-                            onSave={(field, value) => setSuggestion(field, value)}
-                            onSelectCategory={setGenre} />
-                    </div>
-                </CardContent>
-                <div className="block md:hidden z-10 relative">
-                    {!suggestionsPage.display ? <Footer onClear={clearQuery} onSearch={() => { onSearch(query) }} /> : null}
-                </div>
-                <div className="hidden md:block z-10 relative">
-                    <Footer onClear={clearQuery} onSearch={() => { onSearch(query) }} />
-                </div>
-            </Card>
-        </main>
-    );
+  return (
+    <main>
+      <Card className="flex flex-col justify-between h-[calc(100dvh)] bg-gray-100 w-full rounded-none md:h-fit z-10">
+        <CardHeader className="flex-none">
+          <section className="flex justify-between">
+            <div>
+              <CardTitle className="text-xl">Listings Search</CardTitle>
+              <CardDescription>Look for board games.</CardDescription>
+            </div>
+            <div>
+            { suggestionsPage.display ?  <Button variant="ghost" onClick={hideSuggestionsPage}>go back</Button> : <Button variant="ghost">close</Button>}
+            </div>
+          </section>
+        </CardHeader>
+        <CardContent className="h-full overflow-y-auto md:overflow-y-visible">
+          <div className="block md:hidden h-full">
+          { suggestionsPage.display ?  
+            <SuggestionsDisplay 
+              title={suggestionsPage.title}
+              givenSuggestion={query[Object.keys(QUERY_TITLES).find(key => QUERY_TITLES[key] === suggestionsPage.title)]}
+              placeholder={suggestionsPage.placeholder}
+              onExit={(value) => setSuggestion(suggestionsPage.title, value)}/> 
+            : <SearchQueryForm 
+              query={query} 
+              onSearch={ (e : Event, title : string, placeholder : string) => showSuggestionsPage(e, title, placeholder) }
+              onSelectCategory={setCategory}/> 
+          }
+          </div>
+          <div className="hidden md:block z-30">
+            <SearchQueryFormDesktop
+                query={query} 
+                onSave={(field, value) => setSuggestion(field, value)}
+                onSelectCategory={setCategory}/> 
+          </div>
+        </CardContent>
+        <div className="block md:hidden z-10 relative">
+        { !suggestionsPage.display ?  <Footer onClear={clearQuery} onSearch={() => {onSearch(query)}}/> : null}
+        </div>
+        <div className="hidden md:block z-10 relative">
+          <Footer onClear={clearQuery} onSearch={() => {onSearch(query)}}/>
+        </div>
+      </Card>
+    </main>
+  );
 }
 
 export function SearchInputWithIcon() {

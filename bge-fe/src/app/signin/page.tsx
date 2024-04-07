@@ -35,7 +35,7 @@ const page = () => {
     })
 
     return (
-        <section className="flex min-h-screen flex-col justify-between p-8 md:items-center bg-gray-50">
+        <section className="flex min-h-screen flex-col justify-between p-8 md:items-center">
             <div className="flex flex-col items-center">
                 <Image
                     priority

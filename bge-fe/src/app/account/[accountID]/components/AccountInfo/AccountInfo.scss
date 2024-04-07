@@ -1,0 +1,28 @@
+.account-info-container {
+    
+    .account-info-section {
+        display: flex;
+        flex-direction: row;
+
+        .account-avatar-container {
+            height: 10rem;
+            width: 10rem;
+            margin: auto 0;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+
+            .account-avatar {
+                height: 7rem;
+                width: 7rem;
+            }
+        }
+
+        .account-info-details {
+            margin-left: 1rem;
+            margin-top: 2rem;
+        }
+    }
+
+    
+}

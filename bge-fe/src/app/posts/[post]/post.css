@@ -1,0 +1,35 @@
+.post {
+    @apply p-4 grid grid-cols-1 gap-4 max-w-screen-xl mx-auto;
+}
+
+.post .post-user-details {
+    @apply flex h-fit justify-between items-center text-sm font-semibold;
+}
+
+.post .post-contact-form {
+    @apply space-y-1.5;
+}
+
+@media only screen and (min-width: 768px) {
+    .post {
+        @apply gap-8;
+        grid-template-areas: 
+            "a d"
+            "c d";
+        grid-template-rows: auto auto;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .post .post-carousel {
+        grid-area: a;
+    }
+
+    .post .post-contact-form {
+        @apply space-y-1.5;
+        grid-area: c;
+    }
+
+    .post .post-details {
+        grid-area: d;
+    }
+}
