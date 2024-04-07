@@ -6,7 +6,6 @@ import { SearchIcon, FilterIcon } from "lucide-react";
 import { GameCover } from "@/components/gameCover";
 import { listOfGames } from "./data/games";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
 import { BGEAdvancedSearchComponent } from "@/components/bge-advanced-search";
 import { 
     Popover,

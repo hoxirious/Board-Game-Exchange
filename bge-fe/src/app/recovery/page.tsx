@@ -2,6 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useRouter } from "next/router"
+import { useState } from "react"
+import axios from "axios"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -26,12 +29,27 @@ const formSchema = z.object({
 })
 
 const page = () => {
+    const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             email: ""
         }
     })
+
+    const [isShow, setShow] = useState(false)
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        console.log(values)
+        const response = await axios.post('http://localhost:8080/users/', {values})
+        if (response.status === 500) {
+            setShow((isShow) => true)
+        }
+
+        if (response.status === 201) {
+            router.push("/signin")
+        }
+    }
 
     return (
         <section className="flex min-h-screen flex-col justify-between p-8 md:items-center bg-gray-50">
@@ -46,19 +64,21 @@ const page = () => {
                 <h1 className="mb-2 text-3xl font-extrabold w-2/3">Reset Your Password</h1>
                 <p className="w-2/3">Enter your email and we will send you a link to reset your password.</p>
             </div>
-            <div>
-                <Alert variant="destructive" className="flex flex-row gap-4 bg-danger-100 text-black-100">
-                    <div>
-                        <Image src={stopIcon} alt="Error"/>
-                    </div>
-                    <div>
-                        <AlertTitle>Cannot Find Account</AlertTitle>
-                        <AlertDescription>
-                            Please enter an existing email
-                        </AlertDescription>
-                    </div>
-                </Alert>
-            </div>
+            {isShow && (
+                <div>
+                    <Alert variant="destructive" className="flex flex-row gap-4 bg-danger-100 text-black-100">
+                        <div>
+                            <Image src={stopIcon} alt="Error"/>
+                        </div>
+                        <div>
+                            <AlertTitle>Cannot Find Account</AlertTitle>
+                            <AlertDescription>
+                                Please enter an existing email
+                            </AlertDescription>
+                        </div>
+                    </Alert>
+                </div>
+            )}
             <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-lg w-full space-y-4">
@@ -88,10 +108,6 @@ const page = () => {
         </section>
         
     );
-}
-
-function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
 }
 
 export default page;
