@@ -175,7 +175,7 @@ export default function ChatPage({ receiverName, receiverId, location, boardGame
         <div className="h-full w-full">
             <div className="h[15dvh] border-b-2">
                 <div className="grid grid-cols-4 md:grid-cols-3 border-b-2 items-center first:border-t-2 p-2 gap-4 border-gray-100">
-                    <ChevronLeft className="block col-span-1 md:hidden"/>
+                    <ChevronLeft className="block col-span-1 md:hidden" />
                     <Image src={bgeIcon} alt="avatar" width={200} className="col-span-1" />
                     <div className="col-span-2 text-left">
                         <div className="text-black">
@@ -189,9 +189,9 @@ export default function ChatPage({ receiverName, receiverId, location, boardGame
 
             <div className="grid h-[80dvh] overflow-y-auto px-2">
                 {
-                    messages.map((message) => {
+                    messages.map((message, index) => {
                         return (
-                            <MessageBlock messageType={message.messageType} message={message.message} />
+                            <MessageBlock key={`${JSON.stringify(message)}_${index}_${new Date().getTime()}`} messageType={message.messageType} message={message.message} />
                         )
                     })
                 }

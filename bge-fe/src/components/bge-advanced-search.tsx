@@ -37,11 +37,11 @@ function SuggestionsList({data, className, onSelect}) {
       </div>
     )
   }
-  
+
   if (data != null) {
     return (
       <div className={className}>
-        {/* 
+        {/*
           We're using buttons here so that e.relatedTarget (when Input from
           SearchInput is blurred) is set to one of the buttons below.
          */}
@@ -349,7 +349,7 @@ function BGEAdvancedSearchComponent({onSearch}) {
 
   const [suggestionsPage, setSuggestionsPage] = useState(initialSuggestionsPage);
   const [query, setQuery] = useState(initialQuery);
-  
+
   // for debugging query :)
   useEffect(() => {
     console.log(query);
@@ -383,7 +383,7 @@ function BGEAdvancedSearchComponent({onSearch}) {
       case QUERY_TITLES.location:
         newQuery.location = suggestion;
         break;
-    
+
       default:
         break;
     }
@@ -419,23 +419,23 @@ function BGEAdvancedSearchComponent({onSearch}) {
         </CardHeader>
         <CardContent className="h-full overflow-y-auto md:overflow-y-visible">
           <div className="block md:hidden h-full">
-          { suggestionsPage.display ?  
-            <SuggestionsDisplay 
+          { suggestionsPage.display ?
+            <SuggestionsDisplay
               title={suggestionsPage.title}
               givenSuggestion={query[Object.keys(QUERY_TITLES).find(key => QUERY_TITLES[key] === suggestionsPage.title)]}
               placeholder={suggestionsPage.placeholder}
-              onExit={(value) => setSuggestion(suggestionsPage.title, value)}/> 
-            : <SearchQueryForm 
-              query={query} 
+              onExit={(value) => setSuggestion(suggestionsPage.title, value)}/>
+            : <SearchQueryForm
+              query={query}
               onSearch={ (e : Event, title : string, placeholder : string) => showSuggestionsPage(e, title, placeholder) }
-              onSelectCategory={setCategory}/> 
+              onSelectCategory={setCategory}/>
           }
           </div>
           <div className="hidden md:block z-30">
             <SearchQueryFormDesktop
-                query={query} 
+                query={query}
                 onSave={(field, value) => setSuggestion(field, value)}
-                onSelectCategory={setCategory}/> 
+                onSelectCategory={setCategory}/>
           </div>
         </CardContent>
         <div className="block md:hidden z-10 relative">
@@ -449,15 +449,5 @@ function BGEAdvancedSearchComponent({onSearch}) {
   );
 }
 
-export function SearchInputWithIcon() {
-    return (
-        <div className="flex flex-row items-center ">
-            <div className="bg-gray-300 w-10 h-10 rounded-sm flex justify-center items-center">
-                <SearchIcon />
-            </div>
-            <Input className="w-full" placeholder="Search inbox" />
-        </div>
-    )
-}
 
 export { BGEAdvancedSearchComponent };

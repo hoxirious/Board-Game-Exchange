@@ -2,6 +2,7 @@
 import { SearchIcon } from "lucide-react";
 import ChatItem, { ChatItemProps } from "./components/ChatItem";
 import { Input } from "../ui/input";
+import { timeStamp } from "console";
 
 function SearchInputWithIcon() {
     return (
@@ -75,9 +76,9 @@ export default function ChatListPage() {
                 </div>
             </div>
             <div className="overflow-y-auto h-[85dvh]">
-                {items.map((item) => {
+                {items.map((item, index) => {
                     return (
-                        <ChatItem userSentTo={item.userSentTo} latestMessage={item.latestMessage} isUnread={item.isUnread} />
+                        <ChatItem key={`${JSON.stringify(item)}_${index}_${new Date().getTime()}`} userSentTo={item.userSentTo} latestMessage={item.latestMessage} isUnread={item.isUnread} />
                     )
                 })}
             </div>
