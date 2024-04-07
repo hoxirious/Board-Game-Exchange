@@ -1,7 +1,18 @@
 'use client';
-import { SearchInputWithIcon } from "../bge-advanced-search";
+import { SearchIcon } from "lucide-react";
 import ChatItem, { ChatItemProps } from "./components/ChatItem";
+import { Input } from "../ui/input";
 
+function SearchInputWithIcon() {
+    return (
+        <div className="flex flex-row items-center ">
+            <div className="bg-gray-300 w-10 h-10 rounded-sm flex justify-center items-center">
+                <SearchIcon />
+            </div>
+            <Input className="w-full" placeholder="Search inbox" />
+        </div>
+    )
+}
 export default function ChatListPage() {
 
     const items: ChatItemProps[] = [{
@@ -12,7 +23,7 @@ export default function ChatListPage() {
         },
         latestMessage: "Hello, how are you?",
         isUnread: true
-    } as ChatItemProps, {
+    }, {
         userSentTo: {
             name: "Jane Doe",
             id: "2",
@@ -20,7 +31,7 @@ export default function ChatListPage() {
         },
         latestMessage: "I'm doing well, thank you.",
         isUnread: false
-    } as ChatItemProps, {
+    }, {
         userSentTo: {
             name: "Jane Doe",
             id: "2",
@@ -28,7 +39,7 @@ export default function ChatListPage() {
         },
         latestMessage: "I'm doing well, thank you.",
         isUnread: false
-    } as ChatItemProps, {
+    }, {
         userSentTo: {
             name: "Jane Doe",
             id: "2",
@@ -36,7 +47,7 @@ export default function ChatListPage() {
         },
         latestMessage: "I'm doing well, thank you.",
         isUnread: false
-    } as ChatItemProps, {
+    }, {
         userSentTo: {
             name: "Jane Doe",
             id: "2",
@@ -44,7 +55,7 @@ export default function ChatListPage() {
         },
         latestMessage: "I'm doing well, thank you.",
         isUnread: false
-    } as ChatItemProps, {
+    }, {
         userSentTo: {
             name: "Jane Doe",
             id: "2",
@@ -52,12 +63,12 @@ export default function ChatListPage() {
         },
         latestMessage: "I'm doing well, thank you.",
         isUnread: false
-    } as ChatItemProps,
+    },
     ]
 
     return (
         <div className="px-4 h-full">
-            <div className="bg-white h-[15dvh]">
+            <div className="border-b-2 h-[15dvh]">
                 <h1 className="text-5xl font-bold m-4">Inbox</h1>
                 <div className="pb-2">
                     <SearchInputWithIcon />
