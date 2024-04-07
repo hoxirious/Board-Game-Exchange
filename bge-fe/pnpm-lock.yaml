@@ -44,6 +44,9 @@ dependencies:
   embla-carousel-react:
     specifier: ^8.0.0
     version: 8.0.0(react@18.2.0)
+  humanize-duration:
+    specifier: ^3.32.0
+    version: 3.32.0
   lucide-react:
     specifier: ^0.354.0
     version: 0.354.0(react@18.2.0)
@@ -79,6 +82,9 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
+  '@types/humanize-duration':
+    specifier: ^3.27.4
+    version: 3.27.4
   '@types/node':
     specifier: ^20
     version: 20.12.3
@@ -1030,6 +1036,10 @@ packages:
     dependencies:
       tslib: 2.6.2
     dev: false
+
+  /@types/humanize-duration@3.27.4:
+    resolution: {integrity: sha512-yaf7kan2Sq0goxpbcwTQ+8E9RP6HutFBPv74T/IA/ojcHKhuKVlk2YFYyHhWZeLvZPzzLE3aatuQB4h0iqyyUA==}
+    dev: true
 
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
@@ -2291,6 +2301,10 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       function-bind: 1.1.2
+
+  /humanize-duration@3.32.0:
+    resolution: {integrity: sha512-6WsXYTHJr7hXKqoqf5zoWza/lANRAqGlbnZnm0cjDykbXuez1JVXOQGmq0EPB45pXYAJyueRA3S3hfhmMbrMEQ==}
+    dev: false
 
   /ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}

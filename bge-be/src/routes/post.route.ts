@@ -50,12 +50,17 @@ postRouter.get("/search", async (req: Request, res: Response) => {
     }
 
     try {
-        const posts = await Post.find({
+        const posts = category != "" ? await Post.find({
             'title': { "$regex": title, "$options": "i"  },
             'location': { "$regex": location, "$options": "i" },
             'category': { "$in": categoryArray },
             'condition': { "$regex": condition, "$options": "i" },
+        }).exec() : await Post.find({
+            'title': { "$regex": title, "$options": "i"  },
+            'location': { "$regex": location, "$options": "i" },
+            'condition': { "$regex": condition, "$options": "i" },
         }).exec()
+
         res.status(200).send(posts);
     } catch (error: any) {
         console.error(error.message);
