@@ -26,7 +26,6 @@ export const FetchAxios = async <T>(
             },
         });
         result = response.data;
-        console.log("axios return:" + JSON.stringify(result));
         return result;
     } catch (err) {
         const errors = err as Error | AxiosError;
