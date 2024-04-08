@@ -122,6 +122,43 @@ userRouter.put("/:id", async (req: Request, res: Response) => {
     }
 })
 
+userRouter.put("/update/:email", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.requestBody = {
+     description: 'The request body for the update does not need all fields to update the user',
+     schema: { $ref: "#/components/schemas/UserRequest" }
+     },
+     #swagger.responses[200] = {
+     description: 'Successfully updated a user by email',
+     schema: { $ref: "#/components/schemas/UserResponse" }
+     },
+     #swagger.responses[304] = {
+     description: 'Failed to update a user by email',
+     schema: { msg: 'User with email: not updated' }
+     },
+     #swagger.responses[400] = {
+     description: 'Failed to update a user by email',
+     schema: { msg: 'User with email: not updated' }
+     }
+     */
+
+    const email = req?.params?.email;
+
+    try {
+        const updateReq = req.body
+
+        const result = await User.findOneAndUpdate({'email': email}, updateReq)
+
+        result
+            ? res.status(200).send(result)
+            : res.status(304).send({msg: `User with email: ${email} not updated`});
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(400).send({msg: `User with email: ${email} not updated`});
+    }
+})
+
 userRouter.delete("/:id", async (req: Request, res: Response) => {
     /**
      #swagger.tags = ['Users']
