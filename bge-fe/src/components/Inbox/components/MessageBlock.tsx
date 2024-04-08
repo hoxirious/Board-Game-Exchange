@@ -17,7 +17,7 @@ export default function MessageBlock({ messageType, message }: MessageBlockProps
         <>
             {
                 messageType === "receiver" &&
-                <div className="inline-block justify-self-end bg-primary text-white rounded-xl p-3 mb-2 min-w-20 h-auto max-w-[70%]">
+                <div className="inline-block justify-self-end bg-primary text-white rounded-xl p-3 mb-2 h-fit min-w-20 max-w-[70%]">
                     <p className="text-right inline-block">
                     {message.content}
                     </p>
@@ -25,7 +25,7 @@ export default function MessageBlock({ messageType, message }: MessageBlockProps
             }
             {
                 messageType === "sender" &&
-                <div className="inline-block justify-self-start bg-gray-300 text-black rounded-xl p-3 mb-2 min-w-20 max-w-[70%]">
+                <div className="inline-block justify-self-start bg-gray-300 text-black rounded-xl p-3 mb-2 min-w-20 h-fit  max-w-[70%]">
                     {message.content}
                 </div>
             }
