@@ -1,37 +1,26 @@
 'use client';
-import MessageBlock, { MessageBlockProps } from "./components/MessageBlock";
+import MessageBlock from "./components/MessageBlock";
 import Image from "next/image";
 import bgeIcon from "@/../public/bgeIcon.svg";
 import { Input } from "../ui/input";
-import { ArrowLeft, ArrowLeftIcon, ChevronLeft, SendHorizontal, StepBackIcon } from "lucide-react";
+import { ChevronLeft, SendHorizontal} from "lucide-react";
 import { useEffect, useState } from "react";
-import { getUserMessages } from "@/endpoints/inbox.endpoint";
 import { Message, PostMessage } from "@/app/schema/message";
 
 
 interface ChatPageProps {
+    postId: string,
     receiverName: string,
     receiverId: string,
     location: string,
     boardGameName: string,
+    messages: Message[];
+
 }
 
-export default function ChatPage({ receiverName, receiverId, location, boardGameName }: ChatPageProps) {
+export default function ChatPage({ postId, receiverName, receiverId, location, boardGameName, messages}: ChatPageProps) {
 
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [userId, setUserId] = useState<string>('661222f06e33e2de2ddb83b0');
-    const [postId, setPostId] = useState<string>('661222f06e33e2de2ddb83b2');
-    const [externalUserId, setExternalUserId] = useState<string>('661222f06e33e2de2ddb83b1')
-
-    useEffect(() => {
-        const fetchItems = async () => {
-            const res = await getUserMessages('661222f06e33e2de2ddb83b0');
-            if (res) {
-                setMessages(res[postId][externalUserId]);
-            }
-        }
-        fetchItems();
-    }, []);
+    const [userId, setUserId] = useState<string>('66138afef7c2e556d17b2daa');
 
     return (
         <div className="h-full w-full">
@@ -52,13 +41,11 @@ export default function ChatPage({ receiverName, receiverId, location, boardGame
             <div className="grid h-[80dvh] overflow-y-auto px-2">
                 {
                     messages && messages.length > 0 && messages.map((message, index) => {
-
-                        console.log(messages);
                         return (
-                            <MessageBlock key={`${JSON.stringify(message)}_${index}_${message.timestamp}`}
+                            <MessageBlock key={`${index}_${message.timestamp}`}
                                 messageType={message.senderUserID == userId ? 'sender' : 'receiver'}
                                 message={{
-                                    content: message.text,
+                                    content: message.text.trimEnd(),
                                     time: message.timestamp.toString(),
                                     senderName: message.senderUserID,
                                     senderId: message.senderUserID

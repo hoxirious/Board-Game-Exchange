@@ -2,8 +2,9 @@
 import { SearchIcon } from "lucide-react";
 import ChatItem, { ChatItemProps } from "./components/ChatItem";
 import { Input } from "../ui/input";
-import { getUserMessages } from "@/endpoints/inbox.endpoint";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { PostMessage } from "@/app/schema/message";
+import { User } from "@/app/schema/user";
 
 function SearchInputWithIcon() {
     return (
@@ -15,57 +16,12 @@ function SearchInputWithIcon() {
         </div>
     )
 }
-export default function ChatListPage() {
-    const items: ChatItemProps[] = [{
-        userSentTo: {
-            name: "John Doe",
-            id: "1",
-            location: "New York"
-        },
-        latestMessage: "Hello, how are you?",
-        isUnread: true
-    }, {
-        userSentTo: {
-            name: "Jane Doe",
-            id: "2",
-            location: "Los Angeles"
-        },
-        latestMessage: "I'm doing well, thank you.",
-        isUnread: false
-    }, {
-        userSentTo: {
-            name: "Jane Doe",
-            id: "2",
-            location: "Los Angeles"
-        },
-        latestMessage: "I'm doing well, thank you.",
-        isUnread: false
-    }, {
-        userSentTo: {
-            name: "Jane Doe",
-            id: "2",
-            location: "Los Angeles"
-        },
-        latestMessage: "I'm doing well, thank you.",
-        isUnread: false
-    }, {
-        userSentTo: {
-            name: "Jane Doe",
-            id: "2",
-            location: "Los Angeles"
-        },
-        latestMessage: "I'm doing well, thank you.",
-        isUnread: false
-    }, {
-        userSentTo: {
-            name: "Jane Doe",
-            id: "2",
-            location: "Los Angeles"
-        },
-        latestMessage: "I'm doing well, thank you.",
-        isUnread: false
-    },
-    ]
+
+interface ChatListPageProps {
+    receivers: (User & { text: string, isUnread: boolean })[]
+}
+
+export default function ChatListPage({ receivers }: ChatListPageProps) {
 
     return (
         <div className="px-4 h-full">
@@ -76,9 +32,12 @@ export default function ChatListPage() {
                 </div>
             </div>
             <div className="overflow-y-auto h-[85dvh]">
-                {items.map((item, index) => {
+                {receivers && receivers.map((item, index) => {
                     return (
-                        <ChatItem key={`${JSON.stringify(item)}_${index}_${new Date().getTime()}`} userSentTo={item.userSentTo} latestMessage={item.latestMessage} isUnread={item.isUnread} />
+                        <ChatItem key={`${index}_${new Date().getTime()}`} userSentTo={{
+                            name: item.fullName,
+                            location: item.location == "" ? "New York" : item.location
+                        }} latestMessage={item.text} isUnread={item.isUnread} />
                     )
                 })}
             </div>

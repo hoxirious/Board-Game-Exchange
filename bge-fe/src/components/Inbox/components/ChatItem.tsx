@@ -3,7 +3,6 @@ import Image from 'next/image';
 
 interface ChatUser {
     name: string;
-    id: string;
     location: string;
 }
 export interface ChatItemProps {
