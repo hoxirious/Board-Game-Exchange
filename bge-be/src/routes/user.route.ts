@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { User } from "../models/db.model";
+import bcryptjs from 'bcryptjs';
 
 export const userRouter = express.Router();
 
@@ -84,6 +85,109 @@ userRouter.post("/", async (req: Request, res: Response) => {
         console.error(error.message);
         res.status(400).send({msg: "User already exists with same username or email"});
     }
+})
+
+userRouter.post("/signup", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.requestBody = {
+     required: true,
+     schema: { $ref: "#/components/schemas/UserRequest" }
+     },
+     #swagger.responses[201] = {
+     description: 'Successfully signed up',
+     schema: { $ref: "#/components/schemas/UserResponse" }
+     },
+     #swagger.responses[500] = {
+     description: 'Failed to sign up',
+     schema: { msg: 'Failed to create a new user' }
+     },
+     #swagger.responses[400] = {
+     description: 'Failed to sign up',
+     schema: { msg: 'User already exists with same username or email' }
+     }
+     */
+
+    try {
+        const salt = await bcryptjs.genSalt(10)
+        req.body.password = await bcryptjs.hash(req.body.password, salt)
+
+        const result = await User.create(req.body);
+        if (result) {
+            req.session.isLoggedIn = true;
+            req.session.userId = result._id.toString();
+            res.status(201).send(result);
+        } else {
+            res.status(500).send({msg: "Failed to create a new user"});
+        }
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(400).send({msg: "User already exists with same username or email"});
+    }
+})
+
+userRouter.post("/login", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.requestBody = {
+     required: true,
+     schema: { $ref: "#/components/schemas/LoginRequest" }
+     },
+     #swagger.responses[200] = {
+     description: 'Successfully logged in',
+     schema: { msg: 'Successfully logged in' }
+     },
+     #swagger.responses[400] = {
+     description: 'Incorrect credentials given',
+     schema: { msg: 'Incorrect credentials given' }
+     },
+     #swagger.responses[404] = {
+     description: 'User does not exist',
+     schema: { msg: 'User does not exist' }
+     },
+     #swagger.responses[500] = {
+     description: 'Failed to log in',
+     schema: { msg: 'Failed to log in' }
+     },
+     */
+
+    const email = req.body.email
+    const password = req.body.password
+
+    try {
+        const user= await User.findOne({'email': email}).exec();
+        if (user) {
+            const validPassword = await bcryptjs.compare(password, user.password!)
+            if (validPassword) {
+                req.session.isLoggedIn = true;
+                req.session.userId = user._id.toString();
+
+                console.log(req.session.isLoggedIn)
+                res.status(200).send({msg: "Successfully logged in"})
+            } else {
+                res.status(400).send({msg: `Incorrect credentials given`});
+            }
+        } else {
+            res.status(404).send({msg: `User does not exist`});
+        }
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(500).send({msg: `Failed to log in`});
+    }
+})
+
+userRouter.post("/logout", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     #swagger.responses[200] = {
+     description: 'Successfully logged out',
+     schema: { msg: 'Successfully logged out' }
+     },
+     */
+
+    req.session.isLoggedIn = false;
+    req.session.userId = "";
+    res.status(200).send({msg: "Successfully logged out"})
 })
 
 userRouter.put("/:id", async (req: Request, res: Response) => {

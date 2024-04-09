@@ -9,13 +9,32 @@ import { userRouter } from "./routes/user.route";
 import swaggerUi from "swagger-ui-express";
 import swaggerOutput from "./swagger_output.json";
 import * as bodyParser from "body-parser";
+import session from 'express-session';
+import MongoStore from 'connect-mongo'
+
+declare module 'express-session' {
+    interface Session {
+        userId: string;
+        isLoggedIn: boolean;
+    }
+}
 
 dotenv.config();
-
 const app: Express = express();
 const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
+
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.DB_CONN_STRING!,
+        dbName: "store-db",
+        stringify: false,
+    })
+}));
 
 connectToDatabase()
     .then(() => {

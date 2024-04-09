@@ -212,6 +212,10 @@ const doc = {
                 category: "Card Game",
                 ownerUserID: "660df3819689aaa534db83b0",
                 dateCreated: "2024-04-04T00:25:38.127Z"
+            },
+            LoginRequest: {
+                email: "test@gmail.com",
+                password: "test_password",
             }
         }
     }
