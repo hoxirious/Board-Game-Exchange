@@ -26,38 +26,59 @@ import stopIcon from "../../../public/stop.svg"
 import "../style.css"
 
 const formSchema = z.object({
-    email: z.string().email({message: "Please enter your email address"}),
     username: z.string().min(2, {message: "Please choose a username"}).max(50),
-    password: z.string().min(8, {message: "Please choose a password"}).max(50)
+    password: z.string().min(8, {message: "Please choose a password"}).max(50),
+    email: z.string().email({message: "Please enter your email address"}),
+    dateCreated: z.string(),
+    location: z.string(),
+    fullName: z.string().min(2, {message: "Please enter your full name"}),
+    profilePictureUrl: z.string(),
+    isAdmin: z.boolean()
 })
 
 
 
 const page = () => {
     const router = useRouter();
+    var today = new Date()
+    var todayISO = today.toISOString()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
             username: "",
-            password: ""
+            password: "",
+            email: "",
+            dateCreated: todayISO,
+            location: "",
+            fullName: "",
+            profilePictureUrl: "",
+            isAdmin: false
         }
     })
     const [visible, setVisible] = useState(false)
     const [isShow, setShow] = useState(false)
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const salt = await bcryptjs.genSaltSync(10)
-        values.password = await bcryptjs.hashSync(values.password, salt)
         console.log(values)
-        const response = await axios.post('http://localhost:8080/users/', {values})
-        if (response.status === 500) {
-            setShow((isShow) => true)
-        }
-
-        if (response.status === 201) {
-            router.push("/signin")
-        }
+        await axios.post('http://localhost:8080/users/signup', {
+            "username":values.username,
+            "password" : values.password,
+            "email": values.email, 
+            "dateCreated": values.dateCreated,
+            "location": values.location,
+            "fullName": values.fullName,
+            "profilePictureUrl": values.profilePictureUrl,
+            "isAdmin": values.isAdmin
+        }).then(response => {
+            if(response.status === 201) {
+                router.push('/signin')
+            }
+        })
+        .catch(error => {
+            if (error.response.status === 400) {
+                setShow(true);
+            }
+        })
     }
 
     return (
@@ -99,6 +120,19 @@ const page = () => {
                                     <FormLabel>Email:</FormLabel>
                                     <FormControl>
                                         <Input type="email" placeholder="Email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="fullName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Full Name:</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Full Name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
