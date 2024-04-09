@@ -215,6 +215,12 @@ userRouter.put("/:id", async (req: Request, res: Response) => {
 
     try {
         const updateReq = req.body
+
+        if (updateReq.password != undefined && updateReq.password != "") {
+            const salt = await bcryptjs.genSalt(10)
+            updateReq.password = await bcryptjs.hash(req.body.password, salt)
+        }
+
         const result = await User.findByIdAndUpdate(id, updateReq)
 
         result
