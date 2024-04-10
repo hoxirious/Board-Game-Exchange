@@ -96,7 +96,7 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
      },
      #swagger.responses[201] = {
      description: 'Successfully signed up',
-     schema: { $ref: "#/components/schemas/UserResponse" }
+     schema: { userId: 'userId' }
      },
      #swagger.responses[500] = {
      description: 'Failed to sign up',
@@ -116,7 +116,7 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
         if (result) {
             req.session.isLoggedIn = true;
             req.session.userId = result._id.toString();
-            res.status(201).send(result);
+            res.status(201).send({userId: result._id.toString()})
         } else {
             res.status(500).send({msg: "Failed to create a new user"});
         }
@@ -135,7 +135,7 @@ userRouter.post("/login", async (req: Request, res: Response) => {
      },
      #swagger.responses[200] = {
      description: 'Successfully logged in',
-     schema: { msg: 'Successfully logged in' }
+     schema: { userId: 'userId' }
      },
      #swagger.responses[400] = {
      description: 'Incorrect credentials given',
@@ -162,8 +162,7 @@ userRouter.post("/login", async (req: Request, res: Response) => {
                 req.session.isLoggedIn = true;
                 req.session.userId = user._id.toString();
 
-                console.log(req.session.isLoggedIn)
-                res.status(200).send({msg: "Successfully logged in"})
+                res.status(200).send({userId: user._id.toString()})
             } else {
                 res.status(400).send({msg: `Incorrect credentials given`});
             }
@@ -257,6 +256,11 @@ userRouter.put("/update/:email", async (req: Request, res: Response) => {
 
     try {
         const updateReq = req.body
+
+        if (updateReq.password != undefined && updateReq.password != "") {
+            const salt = await bcryptjs.genSalt(10)
+            updateReq.password = await bcryptjs.hash(req.body.password, salt)
+        }
 
         const result = await User.findOneAndUpdate({'email': email}, updateReq)
 

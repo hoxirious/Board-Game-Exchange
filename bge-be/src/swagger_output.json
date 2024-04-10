@@ -1514,12 +1514,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
                 }
               }
             }
@@ -1622,9 +1640,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "msg": {
+                    "userId": {
                       "type": "string",
-                      "example": "Successfully logged in"
+                      "example": "userId"
                     }
                   },
                   "xml": {
@@ -1636,9 +1654,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "msg": {
+                    "userId": {
                       "type": "string",
-                      "example": "Successfully logged in"
+                      "example": "userId"
                     }
                   },
                   "xml": {
