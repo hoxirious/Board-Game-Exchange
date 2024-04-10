@@ -2,7 +2,8 @@
 import { SearchIcon } from "lucide-react";
 import ChatItem, { ChatItemProps } from "./components/ChatItem";
 import { Input } from "../ui/input";
-import { timeStamp } from "console";
+import { getUserMessages } from "@/endpoints/inbox.endpoint";
+import { useEffect } from "react";
 
 function SearchInputWithIcon() {
     return (
@@ -15,7 +16,6 @@ function SearchInputWithIcon() {
     )
 }
 export default function ChatListPage() {
-
     const items: ChatItemProps[] = [{
         userSentTo: {
             name: "John Doe",
