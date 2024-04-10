@@ -3,7 +3,11 @@
 import { boardGameCategories, boardGameConditions } from "@/app/schema/boardGame"
 
 import { Button } from "@/components/ui/button"
-import { ImagePlus, PackageSearch, LayoutGrid } from 'lucide-react'
+import { PackageSearch, LayoutGrid } from 'lucide-react'
+
+import PhotosSelector from '../[post]/PhotosSelector'
+
+import { useRouter } from 'next/navigation'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -27,79 +31,54 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 
+import { formRules, formSchema, create, postDefaultValues } from "@/app/actions/post"
 
-const rules = {
-    title : {
-        min: 2,
-        max: 128
-    }, 
-    description: {
-        max: 512
-    }
-};
-const formSchema = z.object({
-    title: z.string()
-        .min(1, { message: "Please enter a post title." })
-        .min(rules.title.min, { message: "Title must be at least 2 characters." })
-        .max(rules.title.max, { message: "Title cannot be more than 128 characters." }),
-    description: z.string()
-        .max(rules.description.max, { message: "Description cannot be more than 512 characters." }),
-    condition: z.string()
-        .min(1, { message: "Please select a condition." }),
-    category: z.string()
-        .min(1, { message: "Please select a category." })
-});
 
 const page = () => {
+    const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: "",
-            description: "",
-            // TODO: location: user's default location setting
-            location: "",
-            condition: "",
-            category: ""
+            ...postDefaultValues
         }
     })
-     
-    // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        // TODO: submit!
-        console.log(values)
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const post = {
+            ...form.getValues()
+        }
+        console.log(post);
+
+        // TODO: change second argument to actual current user.
+        const response = await create(post, '6611a7d7b24cbcd2fbdb83b0');
+
+        if(response.status === 201) {
+            const data = await response.json();
+            router.push(`/posts/${data._id}`);
+        }
     }
 
     return (
         <main className="p-4">
             <h1 className="border-b-2 font-semibold text-4xl mb-8">Create a New Post</h1>
-            <div className="lg:max-w-screen-lg md:max-w-screen-md md:mx-auto md:grid md:grid-cols-2 md:gap-4">
-                <section>
-                    <div className="flex justify-between items-end">
-                        <h2 className="text-xl font-semibold">Photos</h2>
-                        <span className="text-sm">0/10</span>
-                    </div>
-                    {/* Photo uploader */}
-                    {/* TODO: implement this :) */}
-                    <div className="grid content-center bg-white w-full p-8 text-center rounded border border-black border-dashed md:aspect-square">
-                        <ImagePlus className="w-16 h-16 mb-2 mx-auto" />
-                        <div>
-                            <div className="hidden md:block w-fit mx-auto">
-                                <p className="text-lg font-semibold">Drag and Drop Pictures</p>
-                                <div className="flex items-center">
-                                    <span className="border border-black h-0 flex-grow">&nbsp;</span>
-                                    <p className="p-2">or</p>
-                                    <span className="border border-black h-0 flex-grow">&nbsp;</span>
-                                </div>
-                            </div>
-                            <Button>Browse Photos</Button>
-                        </div>
-                    </div>
-                </section>
-                <section className="post-details">
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1.5">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1.5">
+                    <div className="lg:max-w-screen-lg md:max-w-screen-md md:mx-auto md:grid md:grid-cols-2 md:gap-4">
+                        <section>
+                            <FormField
+                                control={form.control}
+                                name="postsPictureUrl"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <PhotosSelector onChange={field.onChange}/>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </section>
+                        <section className="post-details">
                             <FormField
                             control={form.control}
                             name="title"
@@ -109,7 +88,7 @@ const page = () => {
                                         <h2 className="text-xl font-semibold">Title</h2>
                                         <span>
                                             {form.getValues().title.length}/
-                                            { rules.title.max }
+                                            { formRules.title.max }
                                         </span>
                                     </FormLabel>
                                     <FormControl>
@@ -128,7 +107,7 @@ const page = () => {
                                         <h2 className="text-xl font-semibold">Description</h2>
                                         <span>
                                             {form.getValues().description.length}/
-                                            { rules.description.max }
+                                            { formRules.description.max }
                                         </span>
                                     </FormLabel>
                                     <FormControl>
@@ -138,22 +117,7 @@ const page = () => {
                                 </FormItem>
                             )}
                             />
-                            <FormField
-                            control={form.control}
-                            name="location"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-xl font-semibold">Location</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Search a location" {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        <iframe className="w-full aspect-square" src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=%20Edmonton+(Edmonton)&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                            />
+
                             <h2 className="text-xl font-semibold">Additional Details</h2>
                             <div>
                                 <FormField
@@ -174,8 +138,8 @@ const page = () => {
                                                 </div>
                                             </FormControl>
                                             <SelectContent>
-                                                {boardGameConditions.map((condition) => (
-                                                    <SelectItem value={condition.name}>{condition.name}</SelectItem>
+                                                {boardGameConditions.map((condition, index) => (
+                                                    <SelectItem key={index} value={condition.name}>{condition.name}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -211,15 +175,33 @@ const page = () => {
                                     )}
                                 />
                             </div>
+
+                            <FormField
+                            control={form.control}
+                            name="location"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-xl font-semibold">Location</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Search a location" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        <iframe className="w-full aspect-square" src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=%20Edmonton+(Edmonton)&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                            
                             <div className="flex justify-between py-4">
                                 {/* TODO: implement cancel */}
                                 <Button variant="outline" type="button" className="px-12">Cancel</Button>
                                 <Button type="submit" className="px-12">Post</Button>
                             </div>
-                        </form>
-                    </Form>
-                </section>
-            </div>    
+                        </section>
+                    </div>
+                </form>
+            </Form>
         </main>
     );
 }

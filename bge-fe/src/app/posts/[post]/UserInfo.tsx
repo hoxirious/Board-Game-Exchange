@@ -9,6 +9,7 @@ const UserInfo = ({ userID } : { userID : string }) => {
 
     return (
         <>
+            {/* TODO: make this clickable and go to user profile. */}
             <Avatar className="inline-block align-middle">
                 <AvatarImage src={data.profilePictureUrl} alt="user profile picture"/>
                 <AvatarFallback className="bg-primary text-white">BGE</AvatarFallback>
