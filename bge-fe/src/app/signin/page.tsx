@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
+import { cookies } from 'next/headers'
 import { useState } from "react"
 import axios from "axios"
 
@@ -23,10 +24,11 @@ import Image from "next/image"
 import bgeIcon from "../../../public/bgeIcon.svg"
 import stopIcon from "../../../public/stop.svg"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
+import { setCookies } from "@/lib/actions"
 
 const formSchema = z.object({
-    email: z.string().email({message: "Please enter your email address"}),
-    password: z.string().min(8, {message: "Please enter your password"}).max(50)
+    email: z.string().email({ message: "Please enter your email address" }),
+    password: z.string().min(8, { message: "Please enter your password" }).max(50)
 })
 
 const page = () => {
@@ -48,17 +50,18 @@ const page = () => {
             "email": values.email,
             "password": values.password
         })
-        .then(response => {
-            if (response.status === 200) {
-                console.log(response.data)
-                router.push('/listingView')
-            }
-        })
-        .catch(error => {
-            if (error.response.status === 400 || error.response.status === 404) {
-                setShow(true)
-            }
-        })
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(response.data)
+                    setCookies({ key: 'userId', value: response.data.userId, options: { expires: Date.now() + (24 * 60 * 60 * 1000) } })
+                    router.push('/listingView')
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 400 || error.response.status === 404) {
+                    setShow(true)
+                }
+            })
 
     }
 
@@ -75,7 +78,7 @@ const page = () => {
                 <div>
                     <Alert variant="destructive" className="flex flex-row gap-4 bg-danger-100 text-black-100">
                         <div>
-                            <Image src={stopIcon} alt="Error"/>
+                            <Image src={stopIcon} alt="Error" />
                         </div>
                         <div>
                             <AlertTitle>Incorrect Credentials</AlertTitle>
@@ -110,10 +113,10 @@ const page = () => {
                                     <FormLabel>Password:</FormLabel>
                                     <FormControl>
                                         <Input type={visible ? "text" : "password"} placeholder="Password" {...field}
-                                        suffix={
-                                            <div onClick={() => setVisible(!visible)}>
-                                                {visible ? <EyeOffIcon/> : <EyeIcon/>}
-                                            </div>}
+                                            suffix={
+                                                <div onClick={() => setVisible(!visible)}>
+                                                    {visible ? <EyeOffIcon /> : <EyeIcon />}
+                                                </div>}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -126,7 +129,7 @@ const page = () => {
             </div>
 
             <div className="flex flex-col items-center">
-                <Link href="/recovery" style={{textDecoration: "underline"}}>Forgot Password?</Link>
+                <Link href="/recovery" style={{ textDecoration: "underline" }}>Forgot Password?</Link>
             </div>
             <div className="flex flex-col items-center">
                 <p>Don't have an account?</p>
