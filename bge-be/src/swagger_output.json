@@ -805,6 +805,74 @@
         }
       }
     },
+    "/posts/get/{userId}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully got posts by userid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostList"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to get posts by userId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Posts for userId do not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Posts for userId do not exist"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/messages/{userId}": {
       "get": {
         "tags": [
@@ -1446,12 +1514,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
                 }
               }
             }
@@ -1554,9 +1640,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "msg": {
+                    "userId": {
                       "type": "string",
-                      "example": "Successfully logged in"
+                      "example": "userId"
                     }
                   },
                   "xml": {
@@ -1568,9 +1654,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "msg": {
+                    "userId": {
                       "type": "string",
-                      "example": "Successfully logged in"
+                      "example": "userId"
                     }
                   },
                   "xml": {
