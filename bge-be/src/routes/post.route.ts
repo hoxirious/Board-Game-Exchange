@@ -92,6 +92,30 @@ postRouter.get("/:id", async (req: Request, res: Response) => {
     }
 })
 
+postRouter.get("/get/:userId", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Posts']
+     #swagger.responses[200] = {
+     description: 'Successfully got posts by userid',
+     schema: { $ref: "#/components/schemas/PostList" }
+     },
+     #swagger.responses[404] = {
+     description: 'Failed to get posts by userId',
+     schema: { msg: 'Posts for userId do not exist' }
+     }
+     */
+
+    const userId = req?.params?.userId;
+
+    try {
+        const posts = await Post.find( {'ownerUserID': userId} ).exec()
+        res.status(200).send(posts);
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(404).send({msg: `Posts for userId ${userId} do not exist`});
+    }
+})
+
 postRouter.post("/", async (req: Request, res: Response) => {
     /**
      #swagger.tags = ['Posts']
