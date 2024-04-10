@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import axios from "axios"
 
@@ -44,14 +44,22 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
-        const response = await axios.post('http://localhost:8080/users/', {values})
-        if (response.status === 500) {
-            setShow((isShow) => true)
-        }
+        await axios.post('http://localhost:8080/users/login', {
+            "email": values.email,
+            "password": values.password
+        })
+        .then(response => {
+            if (response.status === 200) {
+                console.log(response.data)
+                router.push('/listingView')
+            }
+        })
+        .catch(error => {
+            if (error.response.status === 400 || error.response.status === 404) {
+                setShow(true)
+            }
+        })
 
-        if (response.status === 201) {
-            router.push("/signin")
-        }
     }
 
     return (
@@ -101,11 +109,11 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Password:</FormLabel>
                                     <FormControl>
-                                        <Input type={visible ? "text" : "password"} placeholder="Password" {...field} 
-                                        suffix={ 
+                                        <Input type={visible ? "text" : "password"} placeholder="Password" {...field}
+                                        suffix={
                                             <div onClick={() => setVisible(!visible)}>
                                                 {visible ? <EyeOffIcon/> : <EyeIcon/>}
-                                            </div>} 
+                                            </div>}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -127,7 +135,7 @@ const page = () => {
                 </Link>
             </div>
         </section>
-        
+
     );
 }
 

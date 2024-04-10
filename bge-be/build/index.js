@@ -37,10 +37,22 @@ const user_route_1 = require("./routes/user.route");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_output_json_1 = __importDefault(require("./swagger_output.json"));
 const bodyParser = __importStar(require("body-parser"));
+const express_session_1 = __importDefault(require("express-session"));
+const connect_mongo_1 = __importDefault(require("connect-mongo"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 app.use(bodyParser.json());
+app.use((0, express_session_1.default)({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false,
+    store: connect_mongo_1.default.create({
+        mongoUrl: process.env.DB_CONN_STRING,
+        dbName: "store-db",
+        stringify: false,
+    })
+}));
 (0, database_service_1.connectToDatabase)()
     .then(() => {
     app.get('/ping', (_req, res) => {

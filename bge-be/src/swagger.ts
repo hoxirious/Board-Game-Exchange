@@ -61,84 +61,86 @@ const doc = {
                 image: "https://cf.geekdo-images.com/original/img/A-0yDJkve0avEicYQ4HoNO-HkK8=/0x0/pic2419375.jpg",
                 category: "Economic,Negotiation"
             },
-            MessageList: {
-                "660df3829689aaa534db83b2 (postId)": {
-                    "660df3819689aaa534db83b0 (otherUserId)": [
-                        {
-                            _id: "660df3829689aaa534db83bd",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "reply: message 1",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b0",
-                            receiverUserID: "660df3819689aaa534db83b1",
-                            hasReceiverSeen: false
-                        },
-                        {
-                            _id: "660df3829689aaa534db83bf",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "reply: message 2",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b0",
-                            receiverUserID: "660df3819689aaa534db83b1",
-                            hasReceiverSeen: false
-                        },
-                        {
-                            _id: "660df3829689aaa534db83c1",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "reply: message 3",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b0",
-                            receiverUserID: "660df3819689aaa534db83b1",
-                            hasReceiverSeen: false
-                        },
-                        {
-                            _id: "660df3829689aaa534db83c3",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "reply: message 4",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b0",
-                            receiverUserID: "660df3819689aaa534db83b1",
-                            hasReceiverSeen: false
-                        },
-                        {
-                            _id: "660df3829689aaa534db83bc",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "first: message 1",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b1",
-                            receiverUserID: "660df3819689aaa534db83b0",
-                            hasReceiverSeen: false
-                        },
-                        {
-                            _id: "660df3829689aaa534db83be",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "first: message 2",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b1",
-                            receiverUserID: "660df3819689aaa534db83b0",
-                            hasReceiverSeen: false
-                        },
-                        {
-                            _id: "660df3829689aaa534db83c0",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "first: message 3",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b1",
-                            receiverUserID: "660df3819689aaa534db83b0",
-                            hasReceiverSeen: false
-                        },
-                        {
-                            _id: "660df3829689aaa534db83c2",
-                            timestamp: "2024-04-04T00:25:38.138Z",
-                            text: "first: message 4",
-                            postId: "660df3829689aaa534db83b2",
-                            senderUserID: "660df3819689aaa534db83b1",
-                            receiverUserID: "660df3819689aaa534db83b0",
-                            hasReceiverSeen: false
-                        }
-                    ]
+            MessageList: [
+                {
+                    "660df3829689aaa534db83b2 (postId)": {
+                        "660df3819689aaa534db83b0 (otherUserId)": [
+                            {
+                                _id: "660df3829689aaa534db83bd",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "reply: message 1",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b0",
+                                receiverUserID: "660df3819689aaa534db83b1",
+                                hasReceiverSeen: false
+                            },
+                            {
+                                _id: "660df3829689aaa534db83bf",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "reply: message 2",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b0",
+                                receiverUserID: "660df3819689aaa534db83b1",
+                                hasReceiverSeen: false
+                            },
+                            {
+                                _id: "660df3829689aaa534db83c1",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "reply: message 3",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b0",
+                                receiverUserID: "660df3819689aaa534db83b1",
+                                hasReceiverSeen: false
+                            },
+                            {
+                                _id: "660df3829689aaa534db83c3",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "reply: message 4",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b0",
+                                receiverUserID: "660df3819689aaa534db83b1",
+                                hasReceiverSeen: false
+                            },
+                            {
+                                _id: "660df3829689aaa534db83bc",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "first: message 1",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b1",
+                                receiverUserID: "660df3819689aaa534db83b0",
+                                hasReceiverSeen: false
+                            },
+                            {
+                                _id: "660df3829689aaa534db83be",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "first: message 2",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b1",
+                                receiverUserID: "660df3819689aaa534db83b0",
+                                hasReceiverSeen: false
+                            },
+                            {
+                                _id: "660df3829689aaa534db83c0",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "first: message 3",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b1",
+                                receiverUserID: "660df3819689aaa534db83b0",
+                                hasReceiverSeen: false
+                            },
+                            {
+                                _id: "660df3829689aaa534db83c2",
+                                timestamp: "2024-04-04T00:25:38.138Z",
+                                text: "first: message 4",
+                                postId: "660df3829689aaa534db83b2",
+                                senderUserID: "660df3819689aaa534db83b1",
+                                receiverUserID: "660df3819689aaa534db83b0",
+                                hasReceiverSeen: false
+                            }
+                        ]
+                    }
                 }
-            },
+            ],
             MessageRequest: {
                 timestamp: "2024-03-25T04:28:28.009Z",
                 text: "test message",
@@ -210,6 +212,10 @@ const doc = {
                 category: "Card Game",
                 ownerUserID: "660df3819689aaa534db83b0",
                 dateCreated: "2024-04-04T00:25:38.127Z"
+            },
+            LoginRequest: {
+                email: "test@gmail.com",
+                password: "test_password",
             }
         }
     }
