@@ -29,6 +29,7 @@ services:
       - /app/be/node_modules
     ports:
       - "8080:8080"
+      - "8000:8000"
     environment:
       MONGO_DB_URL: "mongodb://database:27017"
     depends_on:

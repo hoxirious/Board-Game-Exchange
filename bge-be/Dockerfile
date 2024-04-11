@@ -17,6 +17,9 @@ COPY . .
 RUN npm run build
 
 # Expose port 8000
+EXPOSE 8000
+
+# Expose port 8080
 EXPOSE 8080
 
 # Command to run the application

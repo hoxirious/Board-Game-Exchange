@@ -11,8 +11,17 @@ const userSchema = new mongoose.Schema({
     fullName: String,
     profilePictureUrl: String,
     isAdmin: Boolean,
-}, {versionKey: false}
+}, { versionKey: false }
 );
+
+export interface MessageType {
+    timestamp: Date,
+    text: String,
+    postId: String,
+    senderUserID: String,
+    receiverUserID: String,
+    hasReceiverSeen: Boolean,
+}
 
 // Define schema for Messages Table
 const messageSchema = new mongoose.Schema({
@@ -22,14 +31,14 @@ const messageSchema = new mongoose.Schema({
     senderUserID: String,
     receiverUserID: String,
     hasReceiverSeen: Boolean,
-}, {versionKey: false});
+}, { versionKey: false });
 
 // Define schema for Board Game Categories Table
 const boardGameSchema = new mongoose.Schema({
     title: String,
     category: String,
     image: String,
-}, {versionKey: false});
+}, { versionKey: false });
 
 // Define schema for Posts Table
 const postSchema = new mongoose.Schema({
@@ -41,7 +50,7 @@ const postSchema = new mongoose.Schema({
     category: String,
     ownerUserID: String,
     dateCreated: Date
-}, {versionKey: false});
+}, { versionKey: false });
 
 // Initialize models based on the defined schemas
 export const User = mongoose.model('User', userSchema, 'users');
