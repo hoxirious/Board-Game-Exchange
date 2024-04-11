@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
-import { cookies } from 'next/headers'
 import { useState } from "react"
 import axios from "axios"
 
@@ -24,11 +23,12 @@ import Image from "next/image"
 import bgeIcon from "../../../public/bgeIcon.svg"
 import stopIcon from "../../../public/stop.svg"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
-import { setCookies } from "@/lib/actions"
+import Cookies from "js-cookie"
+import { PasswordInput } from "@/components/ui/password-input"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Please enter your email address" }),
-    password: z.string().min(8, { message: "Please enter your password" }).max(50)
+    password: z.string().min(8, { message: "Your password must be at least 8 characters" }).max(50)
 })
 
 const page = () => {
@@ -43,6 +43,7 @@ const page = () => {
 
     const [visible, setVisible] = useState(false)
     const [isShow, setShow] = useState(false)
+    const [userId, setUserId] = useState<string>('');
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
@@ -53,7 +54,7 @@ const page = () => {
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
-                    setCookies({ key: 'userId', value: response.data.userId, options: { expires: Date.now() + (24 * 60 * 60 * 1000) } })
+                    Cookies.set('userId', response.data.userId, { expires: Date.now() + (24 * 60 * 60 * 1000) });
                     router.push('/listingView')
                 }
             })
@@ -112,7 +113,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Password:</FormLabel>
                                     <FormControl>
-                                        <Input type={visible ? "text" : "password"} placeholder="Password" {...field}
+                                        <PasswordInput type={visible ? "text" : "password"} placeholder="Password" {...field}
                                             suffix={
                                                 <div onClick={() => setVisible(!visible)}>
                                                     {visible ? <EyeOffIcon /> : <EyeIcon />}

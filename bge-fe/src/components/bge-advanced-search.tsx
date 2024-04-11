@@ -1,6 +1,6 @@
 'use client'
 
-import { boardGameCategories } from '@/app/schema/boardGame'
+import { boardGameCategories, boardGameConditions } from '@/app/schema/boardGame'
 
 import useSWRMutation from 'swr/mutation'
 import { useEffect, useRef } from 'react'
@@ -19,11 +19,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { useState } from "react"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select"
 
 import { debounce } from "@/lib/utils"
 
 const QUERY_TITLES = {
-    board_games: "What do you have?",
+    board_games: "What do you want?",
     owned_board_games: "What do you own?",
     location: "Where are you?"
 }
@@ -44,10 +51,10 @@ function SuggestionsList({ data, className, onSelect }) {
           We're using buttons here so that e.relatedTarget (when Input from
           SearchInput is blurred) is set to one of the buttons below.
          */}
-                {data.map((item) => (
+                {data.map((item, index) => (
                     <button
                         className="w-full block p-4 hover:bg-primary-100 text-left border-b last:border-b-0"
-                        key={item}
+                        key={index}
                         onClick={() => onSelect(item)}>{item}</button>
                 ))}
             </div>
@@ -56,35 +63,45 @@ function SuggestionsList({ data, className, onSelect }) {
 }
 
 function useSuggestionsMutation(route) {
-    // TODO: change when api working
-    const fetcher = (url, { arg }: { arg: string }) => {
-        return fetch(url + '?' + (new URLSearchParams({ query: arg })))
-            .then(() => {
-                // remove when api working
-                if (arg === '') {
-                    return [];
-                }
+    // TODO: refactor.. lot has changed since i first wrote this (e.g. no api yet, 
+    // barely know how SWR works)
+    if(route === '/boardGames/titles') {
 
-                switch (url) {
-                    case '/location-suggestions':
-                        return ['city 1', 'city 2', 'city 3', 'city 4']
-                    default:
-                        return ['board game 1', 'board game 2', 'board game 3', 'board game 4']
-                }
-            }
-            )
-    };
+        const domain = 'http://localhost:8080';
+        const fetcher = (url, { arg }) => {
+            if(arg.value === '') return [];
 
-    let { data, trigger, error, isMutating } = useSWRMutation(route, fetcher);
+            return fetch(`${url}/${arg.value}`)
+                .then(async (response) => {
 
-    return { data, trigger, error, isMutating };
+                    const data = await response.json();
+                    return data.slice(0, 5).map((item) => item.title);
+                })
+        };
+
+        let { data, trigger, error, isMutating } = useSWRMutation(`${domain}${route}`, fetcher);
+        return { data, trigger, error, isMutating };
+    } else {
+        // just return cities..
+        const fetcher = (url, { arg }) => {
+            if(arg.value === '') return [];
+
+            return fetch(`${url}?q=${arg.value}&num=5`)
+                .then(async (response) => {
+                    const data = await response.json();
+                    return data.items.map((item) => item.name);
+                })
+        };
+        let { data, trigger, error, isMutating } = useSWRMutation(`https://geogratis.gc.ca/services/geoname/en/geonames.json`, fetcher);
+        return { data, trigger, error, isMutating };
+    }
 }
 
 
 function SuggestionsDisplay({ title, placeholder, givenSuggestion, onExit }) {
     // TODO: change to actual routes when api working...
     const routes = {
-        board_games: 'board_game_suggestions',
+        board_games: '/boardGames/titles',
         location: '/location-suggestions'
     };
 
@@ -111,7 +128,7 @@ function SuggestionsDisplay({ title, placeholder, givenSuggestion, onExit }) {
         }
 
         const fetch = debounce(() => {
-            trigger(e.target.value)
+            trigger({value:e.target.value})
         }, 500);
 
         fetch();
@@ -151,12 +168,33 @@ function SuggestionsDisplay({ title, placeholder, givenSuggestion, onExit }) {
 }
 
 function CategorySelect({ query, onSelect }) {
+    const [categories, setCategories] = useState(new Set())
+
+    function toggleAndGet(category, checked) {
+        console.log(category);
+        console.log(checked);
+        setCategories((o) => { 
+            if(checked) {
+                o.delete(category);
+                return o;
+            } else {
+                return o.add(category);
+            }
+        });
+
+        return [...categories];
+    }
+
+    useEffect(() => {
+        setCategories((o) => new Set([...query.board_game_category]))
+    }, [query])
+
     return (
         <ScrollArea className="w-full whitespace-nowrap rounded-md border">
             <fieldset className="flex w-full space-x-4 p-4">
                 {boardGameCategories.map((category) => (
                     <div key={category.name}>
-                        <input id={category.name} type="radio" value={category.name} name="category" className="inline-block peer hidden" onChange={(e) => onSelect(e.target.value)} checked={query.board_game_category === category.name} />
+                        <input id={category.name} type="checkbox" value={category.name} name="category[]" className="inline-block peer hidden" onChange={(e) =>{ e.stopPropagation(); onSelect(toggleAndGet(category.name, categories.has(category.name))) }} checked={categories.has(category.name)} />
                         {/* Bug: on mobile, not turning blue when selected */}
                         <label htmlFor={category.name} className="w-24 h-24 inline-block shrink-0 bg-black-900 border-2 border-transparent peer-checked:border-primary rounded-md overflow-hidden">
                             <Image
@@ -176,8 +214,8 @@ function CategorySelect({ query, onSelect }) {
     );
 }
 
-// TODO: make multiple select
-function SearchQueryForm({ query, onSearch, onSelectCategory }) {
+// BUG: clicks on city search input when selecting a condition.
+function SearchQueryForm({ query, onSearch, onSelectCategory, onSelectCondition }) {
     return (
         <div className="grid grid-cols-1 w-full items-center gap-4 ">
             <section className="border bg-white p-4 rounded-md">
@@ -190,13 +228,26 @@ function SearchQueryForm({ query, onSearch, onSelectCategory }) {
             <section className="border bg-white p-4 rounded-md">
                 <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="owned_board_games_query">{QUERY_TITLES.owned_board_games}</Label>
-                    <Input readOnly value={query.owned_board_games} id="owned_board_game_query" placeholder="Board games you have" onFocus={(e) => (onSearch(e, QUERY_TITLES.owned_board_games, "Board games you have"))} />
+                    {/* <Input readOnly value={query.owned_board_games} id="owned_board_game_query" placeholder="Board games you have" onFocus={(e) => (onSearch(e, QUERY_TITLES.owned_board_games, "Board games you have"))} /> */}
+                    <Select value={query.condition} onValueChange={(value) => onSelectCondition('condition', value)}>
+                        <div className="flex-grow">
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a Condition" />
+                            </SelectTrigger>
+                        </div>
+                        <SelectContent>
+                            {boardGameConditions.map((condition, index) => (
+                                <SelectItem key={index} value={condition.name}>{condition.name}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
             </section>
+
             <section className="border bg-white p-4 rounded-md">
                 <div className="flex flex-col space-y-1.5">
                     <Label htmlFor="location">{QUERY_TITLES.location}</Label>
-                    <Input readOnly value={query.location} id="location" placeholder="Postal Code or City" onFocus={(e) => (onSearch(e, QUERY_TITLES.location, "Postal Code or City"))} />
+                    <Input readOnly value={query.location} id="location" placeholder="Type in your City..." onFocus={(e) => (onSearch(e, QUERY_TITLES.location, "Type in your City..."))} />
                 </div>
             </section>
         </div>
@@ -224,7 +275,7 @@ function SearchInput({ givenValue, onSave, placeholder, suggestionsMutation }) {
 
     function fetchSuggestions(e) {
         setShowSuggestionsList(true);
-        suggestionsMutation.trigger(e.target.value);
+        suggestionsMutation.trigger({ value: e.target.value});
     }
 
     function handleKeyUp(e) {
@@ -280,7 +331,7 @@ function SearchQueryFormDesktop({ query, onSave, onSelectCategory }) {
                             givenValue={query.board_games}
                             onSave={(value) => onSave(QUERY_TITLES.board_games, value)}
                             // TODO: change endpoint
-                            suggestionsMutation={useSuggestionsMutation('/board-games')} />
+                            suggestionsMutation={useSuggestionsMutation(`/boardGames/titles`)} />
                     </div>
                     <CategorySelect query={query} onSelect={(e) => onSelectCategory(e)}></CategorySelect>
                 </div>
@@ -288,14 +339,26 @@ function SearchQueryFormDesktop({ query, onSave, onSelectCategory }) {
             <div className="grid grid-rows-2 gap-4 w-full">
                 <section className="border bg-white p-4 rounded-md h-fit">
                     <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="owned_board_games_query">{QUERY_TITLES.owned_board_games}</Label>
+                        <Label>Condition</Label>
                         <div className="w-full relative">
-                            <SearchInput
+                            {/* <SearchInput
                                 placeholder="Board games you own"
                                 givenValue={query.owned_board_games}
                                 onSave={(value) => onSave(QUERY_TITLES.owned_board_games, value)}
                                 // TODO: change endpoint
-                                suggestionsMutation={useSuggestionsMutation('/board-games')} />
+                                suggestionsMutation={useSuggestionsMutation('/board-games')} /> */}
+                            <Select value={query.condition} onValueChange={(value) => onSave('condition', value)}>
+                                <div className="flex-grow">
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a Condition" />
+                                    </SelectTrigger>
+                                </div>
+                                <SelectContent>
+                                    {boardGameConditions.map((condition, index) => (
+                                        <SelectItem key={index} value={condition.name}>{condition.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                 </section>
@@ -304,10 +367,11 @@ function SearchQueryFormDesktop({ query, onSave, onSelectCategory }) {
                         <Label htmlFor="location">{QUERY_TITLES.location}</Label>
                         <div className="w-full relative">
                             <SearchInput
-                                placeholder="Postal Code or City"
+                                placeholder="Type in your City..."
                                 givenValue={query.location}
                                 onSave={(value) => onSave(QUERY_TITLES.location, value)}
-                                // TODO: change endpoint
+                                // url/route doesnt even matter here anymore
+                                // TODO: will remove when have the chance to refactor useSuggestionsMutation
                                 suggestionsMutation={useSuggestionsMutation('/location-suggestions')} />
                         </div>
                     </div>
@@ -324,9 +388,17 @@ const Footer = ({ onClear, onSearch }) => (
     </CardFooter>
 )
 
+export const initialQuery = {
+    board_games: '',
+    board_game_category: '',
+    owned_board_games: '',
+    location: '',
+    condition: ''
+};
+
 // This is the search component.
 // the onSearch event is given the query.
-function BGEAdvancedSearchComponent({ onSearch }) {
+const BGEAdvancedSearchComponent = ({ onSearch, closeButton }) => {
     interface suggestionsPageInterface {
         title: string,
         placeholder: string,
@@ -337,13 +409,6 @@ function BGEAdvancedSearchComponent({ onSearch }) {
         title: 'WHat',
         placeholder: 'What',
         display: false
-    };
-
-    const initialQuery = {
-        board_games: '',
-        board_game_category: '',
-        owned_board_games: '',
-        location: ''
     };
 
     const [suggestionsPage, setSuggestionsPage] = useState(initialSuggestionsPage);
@@ -384,70 +449,72 @@ function BGEAdvancedSearchComponent({ onSearch }) {
                 break;
 
             default:
+                newQuery[suggestionType] = suggestion;
                 break;
         }
 
-        function setCategory(category) {
-            const newQuery = structuredClone(query);
-            newQuery.board_game_category = category;
-            setQuery(query => ({
-                ...newQuery
-            }));
-        }
-
-        const initialQuery = {
-            board_games: '',
-            board_game_genre: '',
-            owned_board_games: '',
-            location: ''
-        };
-
-        return (
-            <main>
-                <Card className="flex flex-col justify-between h-[calc(100dvh)] bg-gray-100 w-full rounded-none md:h-fit z-10">
-                    <CardHeader className="flex-none">
-                        <section className="flex justify-between">
-                            <div>
-                                <CardTitle className="text-xl">Listings Search</CardTitle>
-                                <CardDescription>Look for board games.</CardDescription>
-                            </div>
-                            <div>
-                                {suggestionsPage.display ? <Button variant="ghost" onClick={hideSuggestionsPage}>go back</Button> : <Button variant="ghost">close</Button>}
-                            </div>
-                        </section>
-                    </CardHeader>
-                    <CardContent className="h-full overflow-y-auto md:overflow-y-visible">
-                        <div className="block md:hidden h-full">
-                            {suggestionsPage.display ?
-                                <SuggestionsDisplay
-                                    title={suggestionsPage.title}
-                                    givenSuggestion={query[Object.keys(QUERY_TITLES).find(key => QUERY_TITLES[key] === suggestionsPage.title)]}
-                                    placeholder={suggestionsPage.placeholder}
-                                    onExit={(value) => setSuggestion(suggestionsPage.title, value)} />
-                                : <SearchQueryForm
-                                    query={query}
-                                    onSearch={(e: Event, title: string, placeholder: string) => showSuggestionsPage(e, title, placeholder)}
-                                    onSelectCategory={setCategory} />
-                            }
-                        </div>
-                        <div className="hidden md:block z-30">
-                            <SearchQueryFormDesktop
-                                query={query}
-                                onSave={(field, value) => setSuggestion(field, value)}
-                                onSelectCategory={setCategory} />
-                        </div>
-                    </CardContent>
-                    <div className="block md:hidden z-10 relative">
-                        {!suggestionsPage.display ? <Footer onClear={clearQuery} onSearch={() => { onSearch(query) }} /> : null}
-                    </div>
-                    <div className="hidden md:block z-10 relative">
-                        <Footer onClear={clearQuery} onSearch={() => { onSearch(query) }} />
-                    </div>
-                </Card>
-            </main>
-        );
+        setQuery(query => ({
+            ...newQuery
+        }));
     }
-}
 
+    function setCategory(category) {
+        const newQuery = structuredClone(query);
+        newQuery.board_game_category = category;
+        setQuery(query => ({
+            ...newQuery
+        }));
+    }
+
+    function clearQuery() {
+        setQuery(query => initialQuery)
+    }
+
+    return (
+        <>
+            <Card className="flex flex-col justify-between h-[calc(100dvh)] bg-gray-100 w-full rounded-none md:h-fit z-10">
+                <CardHeader className="flex-none">
+                    <section className="flex justify-between">
+                        <div>
+                            <CardTitle className="text-xl">Listings Search</CardTitle>
+                            <CardDescription>Look for board games.</CardDescription>
+                        </div>
+                        <div>
+                            {suggestionsPage.display ? <Button variant="ghost" onClick={hideSuggestionsPage}>go back</Button> : (closeButton)}
+                        </div>
+                    </section>
+                </CardHeader>
+                <CardContent className="h-full overflow-y-auto md:overflow-y-visible">
+                    <div className="block md:hidden h-full">
+                        {suggestionsPage.display ?
+                            <SuggestionsDisplay
+                                title={suggestionsPage.title}
+                                givenSuggestion={query[Object.keys(QUERY_TITLES).find(key => QUERY_TITLES[key] === suggestionsPage.title)]}
+                                placeholder={suggestionsPage.placeholder}
+                                onExit={(value) => setSuggestion(suggestionsPage.title, value)} />
+                            : <SearchQueryForm
+                                query={query}
+                                onSearch={(e: Event, title: string, placeholder: string) => showSuggestionsPage(e, title, placeholder)}
+                                onSelectCategory={setCategory}
+                                onSelectCondition={(type, value) => setSuggestion(type, value)} />
+                        }
+                    </div>
+                    <div className="hidden md:block z-30">
+                        <SearchQueryFormDesktop
+                            query={query}
+                            onSave={(field, value) => setSuggestion(field, value)}
+                            onSelectCategory={setCategory} />
+                    </div>
+                </CardContent>
+                <div className="block md:hidden z-10 relative">
+                    {!suggestionsPage.display ? <Footer onClear={clearQuery} onSearch={() => { onSearch(query) }} /> : null}
+                </div>
+                <div className="hidden md:block z-10 relative">
+                    <Footer onClear={clearQuery} onSearch={() => { onSearch(query) }} />
+                </div>
+            </Card>
+        </>
+    );
+}
 
 export { BGEAdvancedSearchComponent };

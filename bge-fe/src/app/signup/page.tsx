@@ -24,10 +24,11 @@ import Image from "next/image"
 import bgeIcon from "../../../public/bge.svg"
 import stopIcon from "../../../public/stop.svg"
 import "../style.css"
+import { PasswordInput } from "@/components/ui/password-input"
 
 const formSchema = z.object({
     username: z.string().min(2, {message: "Please choose a username"}).max(50),
-    password: z.string().min(8, {message: "Please choose a password"}).max(50),
+    password: z.string().min(8, {message: "Your password must be 8 characters"}).max(50),
     email: z.string().email({message: "Please enter your email address"}),
     dateCreated: z.string(),
     location: z.string(),
@@ -158,7 +159,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Password:</FormLabel>
                                     <FormControl>
-                                        <Input type={visible ? "text" : "password"} placeholder="Password" {...field}
+                                        <PasswordInput type={visible ? "text" : "password"} placeholder="Password" {...field}
                                         suffix={
                                             <div onClick={() => setVisible(!visible)}>
                                                 {visible ? <EyeOffIcon/> : <EyeIcon/>}
