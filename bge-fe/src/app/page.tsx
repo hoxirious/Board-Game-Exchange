@@ -67,7 +67,6 @@ export default async function Home() {
                             )}
                         </div>
                     </div>
-                )}
                 <Button className="w-36 row-span-1 place-self-center md:place-self-start hover:bg-primary-500" variant="default" size="sm">Start Trading Now!</Button>
             </div>
             <div className="h-[12%] flex justify-center md:h-[12%]">
