@@ -29,7 +29,7 @@ const NavBar = () => {
         right: [
             {
                 icon: <CirclePlus />,
-                link: "/newListing",    
+                link: "/posts/create",    
             },
             {
                 icon: <Search />,
@@ -115,7 +115,7 @@ const NavBar = () => {
         right: [
             {
                 icon: <CirclePlus />,
-                link: "/newListing",    
+                link: "/posts/create",    
             },
             {
                 icon: <Search />,
@@ -147,11 +147,11 @@ const NavBar = () => {
         right: [
             {
                 icon: <MessageSquare />,
-                link: "/messages"
+                link: "/inbox"
             },
             {
                 icon: <CirclePlus />,
-                link: "/newListing",    
+                link: "/posts/create",    
             },
             {
                 icon: <Search />,
@@ -212,11 +212,11 @@ const NavBar = () => {
         right: [
             {
                 icon: <MessageSquare />,
-                link: "/messages"
+                link: "/inbox"
             },
             {
                 icon: <CirclePlus />,
-                link: "/newListing",    
+                link: "/posts/create",    
             },
             {
                 icon: <Search />,
@@ -267,6 +267,7 @@ const NavBar = () => {
     } else if (pathName && pathName.includes("/account")) {
         navBarVariant = backNavBarList;
     }
+    navBarVariant = desktopDefaultNavBarList;
     
     return (
         <div className="navbar">
