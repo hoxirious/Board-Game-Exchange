@@ -11,6 +11,7 @@ import swaggerOutput from "./swagger_output.json";
 import * as bodyParser from "body-parser";
 import session from 'express-session';
 import MongoStore from 'connect-mongo'
+import { imageRouter } from "./routes/image.route";
 
 declare module 'express-session' {
     interface Session {
@@ -67,6 +68,7 @@ connectToDatabase()
         app.use("/posts", postRouter);
         app.use("/messages", messageRouter);
         app.use("/users", userRouter);
+        app.use("/images", imageRouter);
         app.listen(port, () => {
             console.log(`Server started at http://localhost:${port}`);
         });

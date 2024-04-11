@@ -39,6 +39,7 @@ const swagger_output_json_1 = __importDefault(require("./swagger_output.json"));
 const bodyParser = __importStar(require("body-parser"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_mongo_1 = __importDefault(require("connect-mongo"));
+const image_route_1 = require("./routes/image.route");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
@@ -76,6 +77,7 @@ app.use((0, express_session_1.default)({
     app.use("/posts", post_route_1.postRouter);
     app.use("/messages", message_route_1.messageRouter);
     app.use("/users", user_route_1.userRouter);
+    app.use("/images", image_route_1.imageRouter);
     app.listen(port, () => {
         console.log(`Server started at http://localhost:${port}`);
     });

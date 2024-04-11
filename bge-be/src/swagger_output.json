@@ -156,16 +156,16 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully got a board game by title",
+            "description": "Successfully got a list of board games by title",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoardGame"
+                  "$ref": "#/components/schemas/BoardGameList"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoardGame"
+                  "$ref": "#/components/schemas/BoardGameList"
                 }
               }
             }
@@ -1938,6 +1938,35 @@
                 "$ref": "#/components/schemas/UserRequest"
               }
             }
+          }
+        }
+      }
+    },
+    "/images/download/{imageId}": {
+      "get": {
+        "tags": [
+          "Images"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "imageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

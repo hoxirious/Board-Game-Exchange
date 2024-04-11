@@ -43,10 +43,17 @@ const postSchema = new mongoose.Schema({
     dateCreated: Date
 }, {versionKey: false});
 
+const imageSchema = new mongoose.Schema({
+    fileName: String,
+    data: 'Buffer',
+    contentType: String,
+}, {versionKey: false});
+
 // Initialize models based on the defined schemas
 export const User = mongoose.model('User', userSchema, 'users');
 export const Message = mongoose.model('Message', messageSchema, 'messages');
 export const BoardGame = mongoose.model('BoardGame', boardGameSchema, 'boardGames');
 export const Post = mongoose.model('Post', postSchema, 'posts');
+export const Image = mongoose.model('Image', imageSchema, 'images');
 
 

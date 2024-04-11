@@ -74,6 +74,20 @@ const postSchema = {
     }
 };
 
+const imageSchema = {
+    validator: {
+        $jsonSchema: {
+            bsonType: 'object',
+            required: ['fileName', 'data', 'contentType'],
+            properties: {
+                fileName: { bsonType: 'string' },
+                data: { bsonType: 'binData' },
+                contentType: { bsonType: 'string' },
+            }
+        }
+    }
+}
+
 // Function to initialize collections
 async function init() {
     try {
@@ -82,7 +96,8 @@ async function init() {
             createCollectionWithValidator(db, 'boardGames', boardGameSchema),
             createCollectionWithValidator(db, 'users', userSchema),
             createCollectionWithValidator(db, 'messages', messageSchema),
-            createCollectionWithValidator(db, 'posts', postSchema)
+            createCollectionWithValidator(db, 'posts', postSchema),
+            createCollectionWithValidator(db, 'images', imageSchema)
         ]);
 
         db.getCollection('users').createIndex({ username: 1 }, { unique: true });
