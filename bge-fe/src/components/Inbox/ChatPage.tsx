@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import { ChevronLeft, SendHorizontal} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Message, PostMessage } from "@/app/schema/message";
+import Cookies from 'js-cookie';
 
 
 interface ChatPageProps {
@@ -20,7 +21,7 @@ interface ChatPageProps {
 
 export default function ChatPage({ postId, receiverName, receiverId, location, boardGameName, messages}: ChatPageProps) {
 
-    const [userId, setUserId] = useState<string>('66138afef7c2e556d17b2daa');
+    const [userId, setUserId] = useState<string>(Cookies.get('userId') ?? '');
 
     return (
         <div className="h-full w-full">

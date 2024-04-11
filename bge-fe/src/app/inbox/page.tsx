@@ -3,12 +3,13 @@ import ChatListPage from "@/components/Inbox/ChatListPage";
 import ChatPage from "@/components/Inbox/ChatPage";
 import { getUserMessages } from "@/endpoints/inbox.endpoint";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { getUser } from "@/endpoints/user.endpoint";
-import { User } from "../schema/user";
+import Cookies from 'js-cookie';
 
 export default function page() {
-    const [userId, setUserId] = useState<string>('66138afef7c2e556d17b2daa');
+    const queryClient = useQueryClient();
+    const [userId, setUserId] = useState<string>(Cookies.get('userId') ?? '');
     const [firstPostId, setFirstPostId] = useState<string>('');
     const [externalUserIds, setExternalUserIds] = useState<string[]>([]);
     const [externalUsers, setExternalUsers] = useState<any[]>([]);
@@ -68,8 +69,6 @@ export default function page() {
     );
 
     if (isLoading && firstPostId == '' && firstExternalUserId == '') return <p>Loading...</p>
-    if (error) return <p>Error: {`Error message: ${error.message}`}</p>
-
     return (
         <div className="grid grid-cols-6  divide-x gap-2 overflow-hidden">
             <div className="col-span-2">
@@ -77,7 +76,8 @@ export default function page() {
             </div>
             <div className="col-span-4">
                 {externalUsers.length > 0 &&
-                    <ChatPage receiverName={"John Doe"}
+                    <ChatPage
+                        receiverName={"John Doe"}
                         postId={firstPostId}
                         receiverId={firstExternalUserId}
                         location={"New York"}
