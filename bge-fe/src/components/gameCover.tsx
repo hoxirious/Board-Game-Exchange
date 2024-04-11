@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Game } from "@/app/listingView/data/games";
+import { Post } from "@/app/schema/Post";
 
 interface GameCoverProps extends React.HTMLAttributes<HTMLDivElement> {
-    game: Game,
+    game: Post,
     gameNameClassName?: string,
     gameLocationClassName?: string,
 }
@@ -19,7 +19,7 @@ export function GameCover({
         <section className={cn("", className)} {...props}>
             <div>
                 <Image
-                    src={game.cover}
+                    src={game.postsPictureUrl[0]}
                     alt={game.name}
                     width={200}
                     height={200}
@@ -27,7 +27,7 @@ export function GameCover({
                 />
             </div>
             <div className="space-y-1 text-sm">
-                <h3 className={cn("font-medium leading-none", gameNameClassName)}>{game.name}</h3>
+                <h3 className={cn("font-medium leading-none", gameNameClassName)}>{game.title}</h3>
                 <p className={cn("text-xs text-muted-foreground", gameLocationClassName)}>{game.location}</p>
             </div>
         </section>

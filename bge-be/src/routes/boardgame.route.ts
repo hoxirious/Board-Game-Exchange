@@ -55,8 +55,8 @@ boardGameRouter.get("/titles/:title", async (req: Request, res: Response) => {
     /**
      #swagger.tags = ['BoardGames']
      #swagger.responses[200] = {
-         description: 'Successfully got a board game by title',
-         schema: { $ref: "#/components/schemas/BoardGame" }
+         description: 'Successfully got a list of board games by title',
+         schema: { $ref: "#/components/schemas/BoardGameList" }
      },
      #swagger.responses[404] = {
          description: 'Failed to get board game by title',
@@ -67,8 +67,10 @@ boardGameRouter.get("/titles/:title", async (req: Request, res: Response) => {
     const title = req?.params?.title;
 
     try {
-        const boardGame = await BoardGame.findOne({'title': { "$regex": title, "$options": "i" }})
-        res.status(200).send(boardGame);
+        const boardGames = await BoardGame.find({
+            'title': { "$regex": title, "$options": "i"  }
+        }).exec();
+        res.status(200).send(boardGames);
     } catch (error: any) {
         console.error(error.message);
         res.status(404).send({msg: `Board game with title ${title} does not exist`});
