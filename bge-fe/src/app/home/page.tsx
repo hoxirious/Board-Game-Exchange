@@ -1,10 +1,11 @@
+'use client'
 import { BGEAdvancedSearchComponent } from "@/components/bge-advanced-search"
 import Cookies from 'js-cookie';
 
 const page = () => {
     const userId = Cookies.get('userId');
-
     console.log(userId);
+
     return (
         <div>
             Home Page
