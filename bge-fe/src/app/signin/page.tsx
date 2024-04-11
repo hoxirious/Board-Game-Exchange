@@ -24,10 +24,11 @@ import bgeIcon from "../../../public/bgeIcon.svg"
 import stopIcon from "../../../public/stop.svg"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import Cookies from "js-cookie"
+import { PasswordInput } from "@/components/ui/password-input"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Please enter your email address" }),
-    password: z.string().min(8, { message: "Please enter your password" }).max(50)
+    password: z.string().min(8, { message: "Your password must be at least 8 characters" }).max(50)
 })
 
 const page = () => {
@@ -112,7 +113,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Password:</FormLabel>
                                     <FormControl>
-                                        <Input type={visible ? "text" : "password"} placeholder="Password" {...field}
+                                        <PasswordInput type={visible ? "text" : "password"} placeholder="Password" {...field}
                                             suffix={
                                                 <div onClick={() => setVisible(!visible)}>
                                                     {visible ? <EyeOffIcon /> : <EyeIcon />}
