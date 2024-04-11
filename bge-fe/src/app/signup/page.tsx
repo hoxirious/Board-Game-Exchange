@@ -102,7 +102,7 @@ const page = () => {
                             <Image src={stopIcon} alt="Error"/>
                         </div>
                         <div>
-                            <AlertTitle>Email already exists</AlertTitle>
+                            <AlertTitle>Email or Username already exists</AlertTitle>
                             <AlertDescription>
                                 Recover your account <Link href="/recovery" className="underline">here</Link>
                             </AlertDescription>
@@ -120,7 +120,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Email:</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="Email" {...field} />
+                                        <Input placeholder="Email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
