@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
-import { cookies } from 'next/headers'
 import { useState } from "react"
 import axios from "axios"
 
@@ -24,7 +23,7 @@ import Image from "next/image"
 import bgeIcon from "../../../public/bgeIcon.svg"
 import stopIcon from "../../../public/stop.svg"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
-import { setCookies } from "@/lib/actions"
+import Cookies from "js-cookie"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Please enter your email address" }),
@@ -43,6 +42,7 @@ const page = () => {
 
     const [visible, setVisible] = useState(false)
     const [isShow, setShow] = useState(false)
+    const [userId, setUserId] = useState<string>('');
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
@@ -53,7 +53,7 @@ const page = () => {
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
-                    setCookies({ key: 'userId', value: response.data.userId, options: { expires: Date.now() + (24 * 60 * 60 * 1000) } })
+                    Cookies.set('userId', response.data.userId, { expires: Date.now() + (24 * 60 * 60 * 1000) });
                     router.push('/listingView')
                 }
             })

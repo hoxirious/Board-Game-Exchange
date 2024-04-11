@@ -1,10 +1,10 @@
 import { BGEAdvancedSearchComponent } from "@/components/bge-advanced-search"
-import { getCookies } from "@/lib/actions";
-import { cookies } from "next/headers";
+import Cookies from 'js-cookie';
 
-const page = async () => {
+const page = () => {
+    const userId = Cookies.get('userId');
 
-    console.log(await getCookies('userId'));
+    console.log(userId);
     return (
         <div>
             Home Page
