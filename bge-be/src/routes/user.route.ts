@@ -114,8 +114,6 @@ userRouter.post("/signup", async (req: Request, res: Response) => {
 
         const result = await User.create(req.body);
         if (result) {
-            req.session.isLoggedIn = true;
-            req.session.userId = result._id.toString();
             res.status(201).send({userId: result._id.toString()})
         } else {
             res.status(500).send({msg: "Failed to create a new user"});
@@ -157,6 +155,16 @@ userRouter.post("/login", async (req: Request, res: Response) => {
     try {
         const user= await User.findOne({'email': email}).exec();
         if (user) {
+
+            // ignore hash for seeded users
+            if ((user.email == "test_user1@mail.com" || user.email == "test_user2@mail.com") && password == user.password!) {
+                req.session.isLoggedIn = true;
+                req.session.userId = user._id.toString();
+
+                res.status(200).send({userId: user._id.toString()})
+                return
+            }
+
             const validPassword = await bcryptjs.compare(password, user.password!)
             if (validPassword) {
                 req.session.isLoggedIn = true;

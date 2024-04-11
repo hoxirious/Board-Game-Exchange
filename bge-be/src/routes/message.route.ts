@@ -51,6 +51,17 @@ messageRouter.get("/:userId", async (req: Request, res: Response) => {
             }
         });
 
+        //sorting by time (oldest to newest)
+        for (const postId in groupedMessages) {
+            for (const externalUserId in groupedMessages[postId]) {
+                groupedMessages[postId][externalUserId].sort((a, b) => {
+                    const timestampA = new Date(a.timestamp).getTime();
+                    const timestampB = new Date(b.timestamp).getTime();
+                    return timestampA - timestampB;
+                });
+            }
+        }
+
         res.status(200).send([groupedMessages]);
     } catch (error: any) {
         console.error(error.message);
