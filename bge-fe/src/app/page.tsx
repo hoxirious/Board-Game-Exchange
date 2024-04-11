@@ -1,33 +1,13 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import bgeLogo from "@/../../public/bgeIcon.svg"
-import { Post } from "./listingView/data/post"
 import { PostCover } from "@/components/postCover"
 import axios from "axios";
-import { useEffect, useState } from "react";
 
-export default function Home() {
+export default async function Home() {
 
-    const [postsList, setPostsList] = useState<Post[]>([]);
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-              const response = await axios.get("http://localhost:8080/posts/");
-              setPostsList(response.data);
-              setLoading(false);
-            } catch (error) {
-              console.error("Error fetching posts:", error);
-              setLoading(false);
-            }
-        };
-
-        fetchPosts();
-        
-    }, [])
+    const response = await axios.get("http://host.docker.internal:8080/posts/")
+    const postsList = response.data
 
     return (
          <main className="h-[93dvh] bg-white flex flex-col">
@@ -40,9 +20,6 @@ export default function Home() {
                         Share and gain new experiences from others by trading your old games at Board Game Exchange.
                     </p>
                 </div>
-                {loading ? (
-                    <div>Loading...</div>
-                ) : (
                     <div className="row-span-3 grid content-center">
                         <div className="hidden lg:w-full lg:row-span-3 lg:grid lg:grid-cols-3 lg:gap-x-4">
                             {postsList.map((post, index) => {
