@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { deletePost, getAllPosts } from '@/endpoints/post.endpoint';
 import { deleteUser, getAllUsers } from '@/endpoints/user.endpoint';
 import { useQuery, useMutation } from "@tanstack/react-query";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 
 
 const page = () => {
@@ -62,35 +63,32 @@ const page = () => {
 
     return (
         <div>
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Email</th>
-                    <th>Date Created</th>
-                    <th>Location</th>
-                    <th>Full Name</th>
-                    <th>Profile Picture Url</th>
-                    <th>Is Admin</th>
-                    <th></th>
-                </tr>
-                {userData?.map((user: any) => {
-                    return (
-                        <tr>
-                            <td>{user._id}</td>
-                            <td>{user.email}</td>
-                            <td>{user.dateCreated.toString()}</td>
-                            <td>{user.location}</td>
-                            <td>{user.fullName}</td>
-                            <td>{user.profilePictureUrl}</td>
-                            <td>{user.isAdmin.toString()}</td>
-                            {
-                                user.isAdmin == false &&
-                                <td><Button onClick={() => deleteUserHandler(user._id)}>Delete</Button></td>
-                            }
-                        </tr>
-                    )
-                })}
-            </table>
+            <Table aria-label="Users Information">
+                <TableHeader>
+                    <TableColumn>Id</TableColumn>
+                    <TableColumn>Email</TableColumn>
+                    <TableColumn>Date Created</TableColumn>
+                    <TableColumn>Location</TableColumn>
+                    <TableColumn>Full Name</TableColumn>
+                    <TableColumn>Profile Picture Url</TableColumn>
+                    <TableColumn>Is Admin?</TableColumn>
+                    <TableColumn>Delete?</TableColumn>
+                </TableHeader>
+                <TableBody>
+                    {userData?.map((user: any) => {
+                        <TableRow>
+                            <TableCell>{user._id}</TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell>{user.dateCreated.toString()}</TableCell>
+                            <TableCell>{user.location}</TableCell>
+                            <TableCell>{user.fullName}</TableCell>
+                            <TableCell>{user.profilePictureUrl}</TableCell>
+                            <TableCell>{user.isAdmin.toString()}</TableCell>
+                        </TableRow>
+                    })}
+                </TableBody>
+            </Table>
+            
             <table>
                 <tr>
                     <th>Id</th>
