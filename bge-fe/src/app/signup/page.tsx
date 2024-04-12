@@ -3,9 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import axios from "axios"
+import Cookies from "js-cookie"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -41,6 +42,14 @@ const formSchema = z.object({
 
 const page = () => {
     const router = useRouter();
+
+    useEffect(() => {
+        const userId = Cookies.get('userId');
+        if (userId) {
+            router.push('/home');
+        }
+    }, []);
+
     var today = new Date()
     var todayISO = today.toISOString()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -102,7 +111,7 @@ const page = () => {
                             <Image src={stopIcon} alt="Error"/>
                         </div>
                         <div>
-                            <AlertTitle>Email already exists</AlertTitle>
+                            <AlertTitle>Email or Username already exists</AlertTitle>
                             <AlertDescription>
                                 Recover your account <Link href="/recovery" className="underline">here</Link>
                             </AlertDescription>
@@ -120,7 +129,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Email:</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="Email" {...field} />
+                                        <Input placeholder="Email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -170,7 +179,7 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full bg-primary-400 hover:bg-primary-500">Sign Up</Button>
+                        <Button type="submit" className="w-full bg-primary-400">Sign Up</Button>
                     </form>
                 </Form>
             </div>

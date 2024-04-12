@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
-import { Post } from "../models/db.model";
+import { Post, Image } from "../models/db.model";
+import multer from 'multer';
 
 export const postRouter = express.Router();
 
@@ -116,7 +117,10 @@ postRouter.get("/get/:userId", async (req: Request, res: Response) => {
     }
 })
 
-postRouter.post("/", async (req: Request, res: Response) => {
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+postRouter.post("/", upload.array('images', 10), async (req: Request, res: Response) => {
     /**
      #swagger.tags = ['Posts']
      #swagger.requestBody = {
@@ -136,8 +140,30 @@ postRouter.post("/", async (req: Request, res: Response) => {
          schema: { msg: 'Failed to create a new post' }
      }
      */
+    const imageUrls = [];
+    try {
+        const files = req.files as Express.Multer.File[];
+        if (files) {
+            const images = files.map(file => ({
+                fileName: file.originalname,
+                data: file.buffer,
+                contentType: file.mimetype,
+            }));
+
+            const results = await Image.insertMany(images);
+
+            for (const i in results) {
+                imageUrls.push(`http://localhost:8080/images/download/${results[i]._id.toString()}`);
+            }
+        }
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(400).send({msg: "Failed to upload images"});
+        return
+    }
 
     try {
+        req.body.postsPictureUrl = imageUrls;
         const result = await Post.create(req.body);
         result
             ? res.status(201).send(result)
@@ -148,7 +174,7 @@ postRouter.post("/", async (req: Request, res: Response) => {
     }
 })
 
-postRouter.put("/:id", async (req: Request, res: Response) => {
+postRouter.put("/:id", upload.array('images', 10), async (req: Request, res: Response) => {
     /**
      #swagger.tags = ['Posts']
      #swagger.requestBody = {
@@ -169,9 +195,35 @@ postRouter.put("/:id", async (req: Request, res: Response) => {
      }
      */
 
+    const imageUrls = [];
+    try {
+        const files = req.files as Express.Multer.File[];
+        if (files) {
+            const images = files.map(file => ({
+                fileName: file.originalname,
+                data: file.buffer,
+                contentType: file.mimetype,
+            }));
+
+            const results = await Image.insertMany(images);
+
+            for (const i in results) {
+                imageUrls.push(`http://localhost:8080/images/download/${results[i]._id.toString()}`);
+            }
+        }
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(400).send({msg: "Failed to upload images"});
+        return
+    }
+
     const id = req?.params?.id;
 
     try {
+        req.body.postsPictureUrl
+            ? req.body.postsPictureUrl = req.body.postsPictureUrl.concat(imageUrls)
+            : req.body.postsPictureUrl = imageUrls;
+
         const updateReq = req.body
         const result = await Post.findByIdAndUpdate(id, updateReq)
 

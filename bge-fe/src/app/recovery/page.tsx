@@ -3,7 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import Cookies from "js-cookie"
 import axios from "axios"
 
 import { Button } from "@/components/ui/button"
@@ -32,7 +33,15 @@ const formSchema = z.object({
 })
 
 const page = () => {
-    const routerRecovery = useRouter();
+    const router = useRouter();
+
+    useEffect(() => {
+        const userId = Cookies.get('userId');
+        if (userId) {
+            router.push('/home');
+        }
+    }, []);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -50,7 +59,7 @@ const page = () => {
             "password": values.password
         }).then(response => {
             if(response.status === 200) {
-                routerRecovery.push('/signin')
+                router.push('/signin')
             }
         }).catch(error =>{
             // Handle error
@@ -108,7 +117,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Email:</FormLabel>
                                     <FormControl>
-                                        <Input type='email' placeholder="Email" {...field} />
+                                        <Input placeholder="Email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -132,7 +141,7 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full bg-primary-400 hover:bg-primary-500">Reset Your Password</Button>
+                        <Button type="submit" className="w-full bg-primary-400">Reset Your Password</Button>
                     </form>
                 </Form>
             </div>

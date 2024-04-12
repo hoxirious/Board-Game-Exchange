@@ -51,16 +51,16 @@ const bodyParser = __importStar(require("body-parser"));
 const socket_io_1 = require("socket.io");
 const db_model_1 = require("./models/db.model");
 const http_1 = require("http");
-const cors_1 = __importDefault(require("cors"));
+const image_route_1 = require("./routes/image.route");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 const wsPort = process.env.WS_PORT || 8000;
 app.use(bodyParser.json());
-app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-}));
+// app.use(cors({
+//     origin: "*",
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+// }));
 const httpServer = (0, http_1.createServer)(app);
 app.use((0, express_session_1.default)({
     secret: 'secret-key',
@@ -78,24 +78,19 @@ app.use((0, express_session_1.default)({
         res.send('pong');
     });
     app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default));
-    // app.use(function(req: Request, res: Response, next) {
-    //
-    //     // Website you wish to allow to connect
-    //     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    //
-    //     // Request methods you wish to allow
-    //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    //
-    //     // Request headers you wish to allow
-    //     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    //
-    //     // Set to true if you need the website to include cookies in the requests sent
-    //     // to the API (e.g. in case you use sessions)
-    //     res.setHeader('Access-Control-Allow-Credentials', 1);
-    //
-    //     // Pass to next layer of middleware
-    //     next();
-    // });
+    app.use(function (req, res, next) {
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        // Request methods you wish to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        // Request headers you wish to allow
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        // Set to true if you need the website to include cookies in the requests sent
+        // to the API (e.g. in case you use sessions)
+        res.setHeader('Access-Control-Allow-Credentials', 1);
+        // Pass to next layer of middleware
+        next();
+    });
     app.use("/boardGames", boardgame_route_1.boardGameRouter);
     app.use("/posts", post_route_1.postRouter);
     app.use("/messages", message_route_1.messageRouter);
@@ -134,6 +129,7 @@ app.use((0, express_session_1.default)({
             }
         }));
     }));
+    app.use("/images", image_route_1.imageRouter);
     app.listen(port, () => {
         console.log(`Server started at http://localhost:${port}`);
     });

@@ -8,8 +8,11 @@ import NavBarButton from "./components/NavBarButton";
 import bgeIcon from "../../../public/bgeIcon.svg";
 
 import "./NavBar.scss";
+import Cookies from 'js-cookie';
+import { useEffect, useState } from "react";
 
 const NavBar = () => {
+    const userId = Cookies.get('userId');
     const homeNavBarList: {
         left: { icon: JSX.Element; link: string }[];
         middle: { icon: JSX.Element; link: string }[];
@@ -17,27 +20,27 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
             {
-                icon: <NavBarButton text="For you" />,
+                icon: <NavBarButton text="For you"/>,
                 link: "/home",
             }
         ],
         middle: [],
         right: [
             {
-                icon: <CirclePlus />,
-                link: "/newListing",    
+                icon: <CirclePlus/>,
+                link: "/posts/create",
             },
             {
-                icon: <Search />,
-                link: "/search",
+                icon: <Search/>,
+                link: "/home",
             },
             {
-                icon: <Menu />,
-                link: "/account/1",
+                icon: <Menu/>,
+                link: `/account/${userId}`,
             },
         ],
     }
@@ -49,11 +52,11 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
             {
-                icon: <NavBarButton text="Explore" />,
+                icon: <NavBarButton text="Explore"/>,
                 link: "/home",
             }
         ],
@@ -61,11 +64,11 @@ const NavBar = () => {
         right: [
             {
                 icon: <span>Sign up</span>,
-                link: "/signup",    
+                link: "/signup",
             },
             {
-                icon: <Search />,
-                link: "/search",
+                icon: <Search/>,
+                link: "/home",
             },
         ],
     }
@@ -77,20 +80,20 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <ChevronLeft />,
+                icon: <ChevronLeft/>,
                 link: "/home",
             },
         ],
         middle: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
         ],
         right: [
             {
-                icon: <Search />,
-                link: "/search",
+                icon: <Search/>,
+                link: "/home",
             },
         ],
     }
@@ -102,28 +105,28 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <ChevronLeft />,
+                icon: <ChevronLeft/>,
                 link: "/home",
             },
         ],
         middle: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
         ],
         right: [
             {
-                icon: <CirclePlus />,
-                link: "/newListing",    
+                icon: <CirclePlus/>,
+                link: "/posts/create",
             },
             {
-                icon: <Search />,
-                link: "/search",
+                icon: <Search/>,
+                link: "/home",
             },
             {
-                icon: <Menu />,
-                link: "/account/1",
+                icon: <Menu/>,
+                link: `/account/${userId}`,
             },
         ],
     }
@@ -135,31 +138,35 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
             {
-                icon: <NavBarButton text="For you" />,
+                icon: <NavBarButton text="For you"/>,
                 link: "/home",
             }
         ],
         middle: [],
         right: [
             {
-                icon: <MessageSquare />,
-                link: "/messages"
+                icon: <span>Sign out</span>,
+                link: "/logout",
             },
             {
-                icon: <CirclePlus />,
-                link: "/newListing",    
+                icon: <MessageSquare/>,
+                link: "/inbox"
             },
             {
-                icon: <Search />,
-                link: "/search",
+                icon: <CirclePlus/>,
+                link: "/posts/create",
             },
             {
-                icon: <User />,
-                link: "/account/1",
+                icon: <Search/>,
+                link: "/home",
+            },
+            {
+                icon: <User/>,
+                link: `/account/${userId}`,
             },
         ],
     }
@@ -171,23 +178,27 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
             {
-                icon: <NavBarButton text="Explore" />,
+                icon: <NavBarButton text="Explore"/>,
                 link: "/home",
             }
         ],
         middle: [],
         right: [
             {
-                icon: <span>Sign up</span>,
-                link: "/signup",    
+                icon: <span>Sign In</span>,
+                link: "/signin",
             },
             {
-                icon: <Menu />,
-                link: "/account/1",
+                icon: <span>Sign up</span>,
+                link: "/signup",
+            },
+            {
+                icon: <Search/>,
+                link: "/home",
             },
         ],
     }
@@ -199,32 +210,36 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <ChevronLeft />,
+                icon: <ChevronLeft/>,
                 link: "/home",
             },
         ],
         middle: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
         ],
         right: [
             {
-                icon: <MessageSquare />,
-                link: "/messages"
+                icon: <span>Sign out</span>,
+                link: "/logout",
             },
             {
-                icon: <CirclePlus />,
-                link: "/newListing",    
+                icon: <MessageSquare/>,
+                link: "/inbox"
             },
             {
-                icon: <Search />,
-                link: "/search",
+                icon: <CirclePlus/>,
+                link: "/posts/create",
             },
             {
-                icon: <User />,
-                link: "/account/1",
+                icon: <Search/>,
+                link: "/home",
+            },
+            {
+                icon: <User/>,
+                link: `/account/${userId}`,
             },
         ],
     }
@@ -236,38 +251,59 @@ const NavBar = () => {
     } = {
         left: [
             {
-                icon: <ChevronLeft />,
+                icon: <ChevronLeft/>,
                 link: "/home",
             },
         ],
         middle: [
             {
-                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo" />,
-                link: "/home",
+                icon: <Image src={bgeIcon} alt="Logo" className="navbar-logo"/>,
+                link: "/",
             },
         ],
         right: [
             {
-                icon: <Search />,
-                link: "/search",
+                icon: <Search/>,
+                link: "/home",
             },
         ],
     }
 
     let navBarVariant = homeNavBarList;
-    // TODO: Implement navBarVariant based on user authentication status
+
+    const [isMobileView, setIsMobileView] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth <= 768);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     const pathName = usePathname();
-    // temporary? just for ui implementation
-    if(pathName === "/signup" || pathName === "/signin" || pathName === "/recovery")
+    if (pathName === "/signup" || pathName === "/signin" || pathName === "/recovery") {
         return;
-    if (pathName === "/home") {
-        navBarVariant = homeNavBarList;
-    } else if (pathName && pathName.includes("/item")) {
-        navBarVariant = backNavBarExtendedList;
+    } else if (pathName.includes("/posts")) {
+        if (isMobileView) {
+            navBarVariant = userId ? backNavBarExtendedList : backNavBarList;
+        } else {
+            navBarVariant = userId ? desktopBackNavBarListExtended : desktopBackNavBarList;
+        }
     } else if (pathName && pathName.includes("/account")) {
-        navBarVariant = backNavBarList;
+        navBarVariant = isMobileView ? homeNavBarList : desktopDefaultNavBarList;
+    } else {
+        if (isMobileView) {
+            navBarVariant = userId ? homeNavBarList : nonUserNavBarList;
+        } else {
+            navBarVariant = userId ? desktopDefaultNavBarList : desktopNonUserNavBarList;
+        }
+
     }
-    
+
     return (
         <div className="navbar">
             <div className="navbar-item navbar-left">

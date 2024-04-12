@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 
 import { Button } from "@/components/ui/button"
@@ -41,9 +41,15 @@ const page = () => {
         }
     })
 
+    useEffect(() => {
+        const userId = Cookies.get('userId');
+        if (userId) {
+            router.push('/home');
+        }
+    }, []);
+
     const [visible, setVisible] = useState(false)
     const [isShow, setShow] = useState(false)
-    const [userId, setUserId] = useState<string>('');
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
@@ -55,7 +61,7 @@ const page = () => {
                 if (response.status === 200) {
                     console.log(response.data)
                     Cookies.set('userId', response.data.userId, { expires: Date.now() + (24 * 60 * 60 * 1000) });
-                    router.push('/listingView')
+                    router.push('/home')
                 }
             })
             .catch(error => {
@@ -100,7 +106,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Email:</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="Email" {...field} />
+                                        <Input placeholder="Email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -124,7 +130,7 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full bg-primary-400 hover:bg-primary-500">Log In</Button>
+                        <Button type="submit" className="w-full bg-primary-400">Log In</Button>
                     </form>
                 </Form>
             </div>

@@ -1,5 +1,3 @@
-import session from 'express-session';
-import MongoStore from 'connect-mongo'
 // src/index.js
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
@@ -16,6 +14,9 @@ import { Message, MessageType } from "./models/db.model";
 import { createServer } from "http";
 import cors from "cors";
 import mongoose from "mongoose";
+import session from 'express-session';
+import MongoStore from 'connect-mongo'
+import { imageRouter } from "./routes/image.route";
 
 declare module 'express-session' {
     interface Session {
@@ -82,7 +83,6 @@ connectToDatabase()
         app.use("/messages", messageRouter);
         app.use("/users", userRouter);
 
-
         const io = new Server(httpServer)
 
         io.on('connection', async(socket) => {
@@ -119,6 +119,7 @@ connectToDatabase()
             })
         })
 
+        app.use("/images", imageRouter);
         app.listen(port, () => {
             console.log(`Server started at http://localhost:${port}`);
         });
