@@ -27,7 +27,11 @@ export function timeAgoHumanReadable(fromDateTime) {
 }
 
 export const fetcher = async (url: string) => {
-    const r = await fetch(url);
+    const r = await fetch(url, {
+        headers: new Headers({
+            "ngrok-skip-browser-warning": "69420",
+        })
+    });
 
     if (!r.ok) {
         const error = new Error('An error occurred while fetching the data.')

@@ -1,10 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import useSWR  from 'swr'
 import Link from 'next/link'
+import { domain, fetcher } from "@/lib/utils";
 
-const fetcher = url => fetch(url).then(r => r.json());
 const UserInfo = ({ userID } : { userID : string }) => {
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/users/${userID}`, fetcher)
+    const { data, error, isLoading } = useSWR(`${domain}/users/${userID}`, fetcher)
 
     if(isLoading) return (<div>Loading</div>)
 

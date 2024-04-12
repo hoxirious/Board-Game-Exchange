@@ -1,3 +1,4 @@
+import { domain } from "@/lib/utils";
 import { z } from "zod"
 
 export const formRules = {
@@ -51,7 +52,6 @@ export const postDefaultValues = {
 }
 
 // if we want actions to run on server this must be http://host.docker.internal
-const domain = 'http://localhost:8080';
 const headers = new Headers({'Content-type': 'multipart/form-data'});
 
 async function setBody(post : Post) {
@@ -67,18 +67,10 @@ async function setBody(post : Post) {
     let i = 0;
     for(const picture of post.postsPictureUrl) {
         if(!picture.file) {
-            // here we fetch and existing image from backend and resend it to the backend
-
-            // TODO: may need to find a more efficient process? i.e. not reread the whole image
-            // since we're fetching picture from the browser now we use localhost instead of host.docker.internal
-            const res = await fetch(picture.url.replace('host.docker.internal', 'localhost'));
-            
-            const file = new File([ (await res.blob())], `${i++}`, {type: 'image/*'});
-
-            body.append("images", file);
-        } else {
-            body.append("images", picture.file);
+            body.append("postsPictureUrl[]", picture.url);
         }
+
+        body.append("images", picture.file);
     }
 
     return body;

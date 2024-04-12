@@ -37,7 +37,7 @@ import { formSchema, formRules, postDefaultValues, update } from '@/app/actions/
 import { SearchInput, useSuggestionsMutation } from "@/components/bge-advanced-search"
 import Cookies from 'js-cookie'
 import { BlankState } from "@/components/blankState"
-import { domain } from "@/lib/utils"
+import { domain, fetcher } from "@/lib/utils"
 
 function handleSelectChange(value, field) {
     // if value is empty, dont change?
@@ -48,7 +48,6 @@ function handleSelectChange(value, field) {
 }
 
 const page = ({ params }: { params: { post: string } }) => {
-    const fetcher = (url) => fetch(url).then(res => res.json());
     const router = useRouter();
     const { data, error, isLoading } = useSWR(`${domain}/posts/${params.post}`, fetcher);
 

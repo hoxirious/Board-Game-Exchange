@@ -27,7 +27,7 @@ const PhotosSelector = (
         for(let i = 0; i < length; i++) {
             const file = e.target.files[i]
             const fileSizeKB = file.size / 1024
-            if (fileSizeKB <= 1) {
+            if (fileSizeKB <= 1024) {
                 newPhotos.push({ 
                     file: e.target.files[i],    
                     url: URL.createObjectURL(e.target.files[i])

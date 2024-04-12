@@ -18,6 +18,9 @@ export const FetchAxios = async <T>(
     let result: T;
     try {
         const response = await axios.request<T>({
+            headers: {
+                "ngrok-skip-browser-warning": "69420",
+            },
             method,
             url: `${domain}/${url}`,
             data,
