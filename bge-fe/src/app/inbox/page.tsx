@@ -25,6 +25,10 @@ export default function page() {
     const [allChatObjs, setAllChatObjs] = useState<ChatObj[]>([]);
     const [selectedExternalUser, setSelectedExternalUser] = useState<ChatObj>(allChatObjs[0]);
 
+    const setChatPage = (chatObj: ChatObj) => {
+        messagesRefetch();
+        setSelectedExternalUser(chatObj);
+    };
 
     const fetchItems = async () => {
         const res = await getUserMessages(userId);
@@ -79,14 +83,12 @@ export default function page() {
 
             setExternalUsers(userMap);
             setPosts(postMap);
-            setSelectedExternalUser(_allChatObjs[0]);
             setAllChatObjs(_allChatObjs);
-
         }
         return res;
     }
 
-    const { isLoading, data, error } = useQuery(
+    const { isLoading, data, error, refetch: messagesRefetch } = useQuery(
         {
             queryKey: ['postMessages', userId],
             queryFn: fetchItems,
@@ -97,16 +99,16 @@ export default function page() {
     return (
         <div className="grid grid-cols-6  divide-x gap-2 overflow-hidden">
             <div className="col-span-2">
-                <ChatListPage chatObjs={allChatObjs} posts={posts} externalUsers={externalUsers} />
+                <ChatListPage setExternalUser={setChatPage} chatObjs={allChatObjs} posts={posts} externalUsers={externalUsers} />
             </div>
             <div className="col-span-4">
-                {allChatObjs.length > 0 &&
+                {allChatObjs.length > 0 && selectedExternalUser &&
                     <ChatPage
                         selectedChatObj={selectedExternalUser}
                         externalUsers={externalUsers}
                         posts={posts} />
                 }
-                {
+                {allChatObjs.length == 0 && !selectedExternalUser &&
                     allChatObjs.length == 0 &&
                     <div className="h-full w-full flex items-center justify-center">
                         <p className="text-2xl">No messages</p>

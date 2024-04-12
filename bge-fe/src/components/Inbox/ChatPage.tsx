@@ -21,16 +21,16 @@ interface ChatPageProps {
     posts: Map<string, Post>
 }
 
-const socket = io('ws://localhost:8000', { transports: ['websocket'] });
 export default function ChatPage({ selectedChatObj, externalUsers, posts }: ChatPageProps) {
 
     const [userId, setUserId] = useState<string>(Cookies.get('userId') ?? '');
     const [messages, setMessages] = useState<Message[]>(selectedChatObj.messsages);;
     const [input, setInput] = useState<string>('');
     const [roomId, setRoomId] = useState<string>(generateRoomId(userId, selectedChatObj.externalUserId, selectedChatObj.postId));
+    const [ws, setWs] = useState<any>(null);
 
     const sendMessage = () => {
-        socket.emit('message',
+        ws.emit('message',
             {
                 timestamp: new Date(),
                 text: input,
@@ -44,14 +44,15 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts }: Chat
         setInput('');
     }
 
-
-
     useEffect(() => {
-        setRoomId(generateRoomId(userId, selectedChatObj.externalUserId, selectedChatObj.postId));
+        const socket = io('ws://localhost:8000', { transports: ['websocket'] });
+        setWs(socket);
+        const newRoomId = generateRoomId(userId, selectedChatObj.externalUserId, selectedChatObj.postId);
+        setRoomId(newRoomId);
         socket.on('connect', () => {
             console.log('connected');
         });
-        socket.emit('join-room', roomId);
+        socket.emit('join-room', newRoomId);
 
         socket.on('message', (msg: Message) => {
             console.log("Received Message: ", msg);
@@ -71,14 +72,41 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts }: Chat
             console.log(reason);
         });
 
+        setMessages(selectedChatObj.messsages);
+
         return () => {
+            socket.off('message', (msg: Message) => {
+                console.log("Received Message: ", msg);
+                setMessages((prevMessages) => [...prevMessages, msg]);
+            });
+
+            socket.off("connect_error", (err) => {
+                // the reason of the error, for example "xhr poll error"
+                console.log(err.message);
+
+                console.log(err.cause);
+            });
+
+            socket.off("disconnect", (reason) => {
+                // the reason of the disconnection (voluntary or not)
+                //
+                console.log(reason);
+            });
+
+            socket.disconnect();
         }
 
     }, [selectedChatObj, userId])
 
+    const handleKeyUp = (e: any) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
     return (
         <div className="h-full w-full">
-            <div className="h[15dvh] border-b-2">
+            <div className="h-[15dvh] border-b-2">
                 <div className="grid grid-cols-4 md:grid-cols-3 border-b-2 items-center first:border-t-2 p-2 gap-4 border-gray-100">
                     <ChevronLeft className="block col-span-1 md:hidden" />
                     <Image src={bgeIcon} alt="avatar" width={200} className="col-span-1" />
@@ -91,7 +119,7 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts }: Chat
                     </div>
                 </div>
             </div>
-            <div className="grid h-[80dvh] overflow-y-auto px-2" id="scroller">
+            <div className="grid h-[70dvh] overflow-y-auto px-2 pt-2" id="scroller">
                 {
                     messages && messages.length > 0 && messages.map((message, index) => {
                         return (
@@ -110,7 +138,7 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts }: Chat
             </div>
 
             <div className="w-full flex flex-row justify-start gap-5 items-center h-[5dvh]  absolute bottom-0 px-2">
-                <Input className="w-3/5" placeholder="Type a message" onChange={(e) => setInput(e.target.value)} value={input} />
+                <Input onKeyUp={handleKeyUp} className="w-3/5" placeholder="Type a message" onChange={(e) => setInput(e.target.value)} value={input} />
                 <SendHorizontal onClick={() => sendMessage()} />
             </div>
 

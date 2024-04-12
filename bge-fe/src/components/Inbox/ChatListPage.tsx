@@ -1,4 +1,3 @@
-'use client';
 import { SearchIcon } from "lucide-react";
 import ChatItem, { ChatItemProps } from "./components/ChatItem";
 import { Input } from "../ui/input";
@@ -22,10 +21,11 @@ function SearchInputWithIcon() {
 interface ChatListPageProps {
     chatObjs: ChatObj[],
     externalUsers: Map<string, User>,
-    posts: Map<string, Post>
+    posts: Map<string, Post>,
+    setExternalUser: (externalUser: ChatObj) => void
 }
 
-export default function ChatListPage({ chatObjs, externalUsers, posts}: ChatListPageProps) {
+export default function ChatListPage({ chatObjs, externalUsers, posts, setExternalUser }: ChatListPageProps) {
     return (
         <div className="px-4 h-full">
             <div className="border-b-2 h-[15dvh]">
@@ -37,10 +37,12 @@ export default function ChatListPage({ chatObjs, externalUsers, posts}: ChatList
             <div className="overflow-y-auto h-[85dvh]">
                 {chatObjs && chatObjs.map((item, index) => {
                     return (
-                        <ChatItem key={`${index}_${new Date().getTime()}`} userSentTo={{
-                            name: externalUsers.get(item.externalUserId)?.fullName ?? "Not available",
-                            location: externalUsers.get(item.externalUserId)?.location ?? "Not available",
-                        }} isUnread={false} boardGame={posts.get(item.postId)?.title ?? "Not available"} />
+                        <div className="hover:bg-gray-200" onClick={() => setExternalUser(item)}>
+                            <ChatItem key={`${index}_${new Date().getTime()}`} userSentTo={{
+                                name: externalUsers.get(item.externalUserId)?.fullName ?? "Not available",
+                                location: externalUsers.get(item.externalUserId)?.location ?? "Not available",
+                            }} isUnread={false} boardGame={posts.get(item.postId)?.title ?? "Not available"} />
+                        </div>
                     )
                 })}
             </div>
