@@ -6,6 +6,20 @@ export const userRouter = express.Router();
 
 userRouter.use(express.json());
 
+userRouter.get("/", async (req: Request, res: Response) => {
+    /**
+     #swagger.tags = ['Users']
+     */
+
+    try {
+        const users = await User.find().exec()
+        res.status(200).send(users)
+    } catch (error: any) {
+        console.error(error.message);
+        res.status(404).send({msg: `Users could not be found`});
+    }
+})
+
 userRouter.get("/:id", async (req: Request, res: Response) => {
     /**
      #swagger.tags = ['Users']
