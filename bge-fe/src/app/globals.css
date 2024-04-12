@@ -131,4 +131,7 @@
     @apply text-foreground;
     background-color: hsl(var(--page-background));
   }
+  body:has(div.dont-overflow-body) {
+    overflow: hidden;
+  }
 }
