@@ -6,6 +6,8 @@ export const postRouter = express.Router();
 
 postRouter.use(express.json());
 
+const domain = "http://host.docker.internal:8080";
+
 postRouter.get("/", async (_req: Request, res: Response) => {
     /**
      #swagger.tags = ['Posts']
@@ -153,7 +155,7 @@ postRouter.post("/", upload.array('images', 10), async (req: Request, res: Respo
             const results = await Image.insertMany(images);
 
             for (const i in results) {
-                imageUrls.push(`http://host.docker.internal:8080/images/download/${results[i]._id.toString()}`);
+                imageUrls.push(`${domain}/images/download/${results[i]._id.toString()}`);
             }
         }
     } catch (error: any) {
@@ -209,7 +211,7 @@ postRouter.put("/:id", upload.array('images', 10), async (req: Request, res: Res
             const results = await Image.insertMany(images);
 
             for (const i in results) {
-                imageUrls.push(`http://host.docker.internal:8080/images/download/${results[i]._id.toString()}`);
+                imageUrls.push(`${domain}/images/download/${results[i]._id.toString()}`);
             }
         }
     } catch (error: any) {
