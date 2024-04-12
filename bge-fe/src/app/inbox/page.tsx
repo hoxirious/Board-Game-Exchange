@@ -101,23 +101,53 @@ export default function page() {
     }
 
     return (
-        <div className="grid grid-cols-6  divide-x gap-2 overflow-hidden">
-            <div className="col-span-2">
-                <ChatListPage setExternalUser={setChatPage} chatObjs={allChatObjs} posts={posts} externalUsers={externalUsers} />
-            </div>
-            <div className="col-span-4">
-                {allChatObjs.length > 0 && selectedExternalUser &&
-                    <ChatPage
-                        selectedChatObj={selectedExternalUser}
-                        externalUsers={externalUsers}
-                        posts={posts} />
-                }
-                {allChatObjs.length == 0 && !selectedExternalUser &&
-                    allChatObjs.length == 0 &&
-                    <div className="h-full w-full flex items-center justify-center">
-                        <BlankState variant="empty" title="No messages" body="You don't have any messages yet."></BlankState>
+        <div>
+            <div className="md:hidden grid dont-overflow-body grid-cols-6 divide-x gap-2 overflow-hidden">
+                {selectedExternalUser ? (
+                    <div className="col-span-6 bg-background_page">
+                        {allChatObjs.length > 0 && selectedExternalUser &&
+                            <ChatPage
+                                onBack={() => {
+                                    setSelectedExternalUser(null)
+                                }}
+                                selectedChatObj={selectedExternalUser}
+                                externalUsers={externalUsers}
+                                posts={posts} />
+                        }
+                        {allChatObjs.length == 0 && !selectedExternalUser &&
+                            allChatObjs.length == 0 &&
+                            <div className="h-full w-full flex items-center justify-center">
+                                <BlankState variant="empty" title="No messages" body="You don't have any messages yet."></BlankState>
+                            </div>
+                        }
                     </div>
-                }
+                ) : (
+                    <div className="col-span-6">
+                        <ChatListPage setExternalUser={setChatPage} chatObjs={allChatObjs} posts={posts} externalUsers={externalUsers} />
+                    </div>
+                )}
+            </div>
+            <div className="md:grid hidden dont-overflow-body grid-cols-6 divide-x overflow-hidden">
+                <div className="col-span-2">
+                    <ChatListPage setExternalUser={setChatPage} chatObjs={allChatObjs} posts={posts} externalUsers={externalUsers} />
+                </div>
+                <div className="col-span-4 bg-background_page">
+                    {allChatObjs.length > 0 && selectedExternalUser &&
+                        <ChatPage
+                            onBack={() => {
+                                setSelectedExternalUser(null)
+                            }}
+                            selectedChatObj={selectedExternalUser}
+                            externalUsers={externalUsers}
+                            posts={posts} />
+                    }
+                    {allChatObjs.length == 0 && !selectedExternalUser &&
+                        allChatObjs.length == 0 &&
+                        <div className="h-full w-full flex items-center justify-center">
+                            <BlankState variant="empty" title="No messages" body="You don't have any messages yet."></BlankState>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     )

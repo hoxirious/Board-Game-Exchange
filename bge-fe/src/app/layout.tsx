@@ -23,7 +23,7 @@ export default function RootLayout({
 
     return (
         <html lang="en">
-            <body className={`${inter.className} relative`}>
+            <body className={`${inter.className}`}>
                 <Providers>
                     <div className="sticky inset-0 bg-[--page-background] z-20">
                         <Navbar />

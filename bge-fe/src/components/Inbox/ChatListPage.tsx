@@ -27,12 +27,12 @@ interface ChatListPageProps {
 
 export default function ChatListPage({ chatObjs, externalUsers, posts, setExternalUser }: ChatListPageProps) {
     return (
-        <div className="px-4 h-full">
-            <div className="border-b-2 h-[15dvh]">
+        <div className="h-full">
+            <div className="border-b-2 p-4">
                 <h1 className="text-5xl font-bold m-4">Inbox</h1>
-                <div className="pb-2">
+                {/* <div className="pb-2">
                     <SearchInputWithIcon />
-                </div>
+                </div> */}
             </div>
             <div className="overflow-y-auto h-[85dvh]">
                 {chatObjs && chatObjs.map((item, index) => {
