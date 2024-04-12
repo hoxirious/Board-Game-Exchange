@@ -10,13 +10,13 @@ import { Filter, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import useSWR  from 'swr'
-import { fetcher } from '@/lib/utils'
+import { domain, fetcher } from '@/lib/utils'
 
 import { sendMessage } from '@/app/actions/post'
 
 import "./AccountInfo.scss";
 
-const API = "http://localhost:8080";
+const API = domain;
 
 const AccountInfo = ({ accountID, setIsSheetOpen, userData, searchQuery, setSearchQuery, searchForGames, activeListings }:
     { accountID: string, setIsSheetOpen: Function, userData: object, searchQuery: string, setSearchQuery: Function, searchForGames: Function, activeListings: number }) => {

@@ -140,9 +140,8 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts, onBack
                 <div id="anchor"></div>
             </div>
 
-            <div className="w-full flex flex-row justify-start gap-5 items-center  absolute bottom-0 p-2">
+            <div className="w-full bg-page_background flex flex-row justify-start gap-5 items-center bottom-[4rem] mt-[-0.5rem] right-0 p-2">
                 <Input onKeyUp={handleKeyUp} className="w-full" placeholder="Type a message" onChange={(e) => setInput(e.target.value)} value={input} />
-                <SendHorizontal onClick={() => sendMessage()} />
             </div>
 
         </div>

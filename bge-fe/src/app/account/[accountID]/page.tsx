@@ -19,11 +19,11 @@ import {
   } from "@/components/Credenza/credenza";
 import { toast, useToast } from "@/components/ui/use-toast";
 import { BlankState } from "@/components/blankState";
-import { debounce } from "@/lib/utils";
+import { debounce, domain } from "@/lib/utils";
 
 import { PostCover } from "@/components/postCover";
 
-const API = "http://localhost:8080";
+const API = domain;
   
 
 import NavBar from "@/components/NavBar/NavBar";
@@ -31,7 +31,12 @@ import AccountInfo from "./components/AccountInfo/AccountInfo";
 
 
 const getUserPosts = async (accountID: string) => {
-    const res = await fetch(`${API}/posts/get/${accountID}`);
+    const res = await fetch(
+        `${API}/posts/get/${accountID}`, {
+        headers: new Headers({
+            "ngrok-skip-browser-warning": "69420",
+        })
+    });
     const data = await res.json();
     return data;
 }
@@ -46,7 +51,12 @@ const page = ({ params }: { params: { accountID: string } }) => {
     const [updatedUserData, setUpdatedUserData] = useState({});
 
     const getUserData = async (accountID: string) => {
-        const res = await fetch(`${API}/users/${accountID}`);
+        const res = await fetch(
+            `${API}/users/${accountID}`, {
+            headers: new Headers({
+                "ngrok-skip-browser-warning": "69420",
+            })
+        });
         const data = await res.json();
         setUserData(data);
     }
@@ -85,7 +95,8 @@ const page = ({ params }: { params: { accountID: string } }) => {
         const res = await fetch(`${API}/users/${accountID}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "69420"
             },
             body: JSON.stringify(updatedUserData)
         });

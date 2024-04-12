@@ -288,14 +288,12 @@ const NavBar = () => {
     const pathName = usePathname();
     if (pathName === "/signup" || pathName === "/signin" || pathName === "/recovery") {
         return;
-    } else if (pathName.includes("/posts")) {
+    } else if (pathName.includes("/posts") || pathName.includes('*/account')) {
         if (isMobileView) {
             navBarVariant = userId ? backNavBarExtendedList : backNavBarList;
         } else {
             navBarVariant = userId ? desktopBackNavBarListExtended : desktopBackNavBarList;
         }
-    } else if (pathName && pathName.includes("/account")) {
-        navBarVariant = isMobileView ? homeNavBarList : desktopDefaultNavBarList;
     } else {
         if (isMobileView) {
             navBarVariant = userId ? homeNavBarList : nonUserNavBarList;
