@@ -1,4 +1,5 @@
 export interface Post {
+    _id: string,
     postsPictureUrl: [],
     title: string,
     description: string,

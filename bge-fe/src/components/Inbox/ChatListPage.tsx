@@ -1,8 +1,6 @@
 import { SearchIcon } from "lucide-react";
 import ChatItem, { ChatItemProps } from "./components/ChatItem";
 import { Input } from "../ui/input";
-import { useQuery } from "@tanstack/react-query";
-import { PostMessage } from "@/app/schema/message";
 import { User } from "@/app/schema/user";
 import { ChatObj } from "@/app/inbox/page";
 import { Post } from "@/app/schema/Post";
