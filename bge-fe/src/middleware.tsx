@@ -27,11 +27,6 @@ export async function middleware(request: NextRequest) {
         request.cookies.delete("userId");
         const response = NextResponse.redirect(new URL(`${domain}/signin`), request.url);
         response.cookies.delete("userId");
-        await fetch(`${domain}/users/logout`, {
-            headers: new Headers({'Content-type': 'application/json'}),
-            mode: 'cors',
-            method: 'POST',
-        });
         return response;
     }
 }
