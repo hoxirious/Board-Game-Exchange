@@ -147,7 +147,7 @@ const page = ({ params }: { params: { post: string } }) => {
                                 <h2 className="text-2xl font-bold">{data.title}</h2>
                             </dt>
                             {Cookies.get('userId') === data.ownerUserID ? (
-                            <div className="space-x-2">
+                            <div className="space-x-2 text-right">
                                 <Button variant="ghost"><Link href={`/posts/${params.post}/edit`}>Edit</Link></Button>
                                 <Button variant="destructive" onClick={handleDelete}>Delete</Button>
                             </div>) : null}
