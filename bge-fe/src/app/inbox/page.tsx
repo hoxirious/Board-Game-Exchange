@@ -9,6 +9,7 @@ import Cookies from 'js-cookie';
 import { getPost } from "@/endpoints/post.endpoint";
 import { User } from "../schema/user";
 import { Post } from "../schema/Post";
+import { BlankState } from "@/components/blankState";
 
 export interface ChatObj {
     postId: string,
@@ -95,7 +96,10 @@ export default function page() {
         }
     );
 
-    if (isLoading && selectedExternalUser) return <p>Loading...</p>
+    if (isLoading && selectedExternalUser) {
+        <BlankState variant="loading" title="Loading messages" body="It shouldn't take too long..."></BlankState>
+    }
+
     return (
         <div className="grid grid-cols-6  divide-x gap-2 overflow-hidden">
             <div className="col-span-2">
@@ -111,7 +115,7 @@ export default function page() {
                 {allChatObjs.length == 0 && !selectedExternalUser &&
                     allChatObjs.length == 0 &&
                     <div className="h-full w-full flex items-center justify-center">
-                        <p className="text-2xl">No messages</p>
+                        <BlankState variant="empty" title="No messages" body="You don't have any messages yet."></BlankState>
                     </div>
                 }
             </div>

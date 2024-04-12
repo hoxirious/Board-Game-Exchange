@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { CircleSlash2, Coffee, HeartCrack } from 'lucide-react'
+import { CircleSlash2, Coffee, HeartCrack, RectangleEllipsis } from 'lucide-react'
 
 export function BlankState({
     title,
@@ -13,9 +13,9 @@ export function BlankState({
 }) {
     function icon() {
         switch(variant) {
-            case 'loading': 
+            case 'loading':
                 return (<Coffee strokeWidth={1} size={150} className="block w-fit mx-auto" />)
-            case '404': 
+            case '404':
                 return (<CircleSlash2 strokeWidth={1} size={150} className="block w-fit mx-auto" />)
             case 'error':
                 return (<HeartCrack strokeWidth={1} size={150} className="block w-fit mx-auto" />)
