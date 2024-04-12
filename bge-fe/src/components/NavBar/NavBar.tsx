@@ -125,10 +125,10 @@ const NavBar = () => {
                 icon: <Search/>,
                 link: "/home",
             },
-            {
-                icon: <Menu/>,
-                link: `/account/${userId}`,
-            },
+            // {
+            //     icon: <Menu/>,
+            //     link: `/account/${userId}`,
+            // },
         ],
     }
 
@@ -325,9 +325,11 @@ const NavBar = () => {
                         {item.icon}
                     </Link>
                 ))}
-                <label htmlFor="side-menu-toggle" className="md:hidden block px-1">
-                    <Menu/>
-                </label>
+                { userId ? (
+                    <label htmlFor="side-menu-toggle" className="md:hidden block px-1">
+                        <Menu/>
+                    </label>
+                ) : null}
                 <input id="side-menu-toggle" type="checkbox" className="peer hidden"></input>
                 <SideMenu className="fixed z-20 w-full h-full bg-[#ffffff] grid items-center inset-0 w-full h-screen peer-checked:visible peer-checked:opacity-85 opacity-0 invisible transition-opacity transition-visibility duration-300 ease-in-out">
                 </SideMenu>
