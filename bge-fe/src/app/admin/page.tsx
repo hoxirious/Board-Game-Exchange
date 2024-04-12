@@ -3,12 +3,16 @@
 import { BlankState } from '@/components/blankState';
 import { Button } from '@/components/ui/button';
 import { deletePost, getAllPosts } from '@/endpoints/post.endpoint';
-import { deleteUser, getAllUsers } from '@/endpoints/user.endpoint';
+import { deleteUser, getAllUsers, getUser } from '@/endpoints/user.endpoint';
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
+import { useState } from 'react';
+import Cookies from 'js-cookie';
 
 
 const page = () => {
+
+    const [userId, setUserId] = useState<string>(Cookies.get('userId') ?? '');
 
     const fetchAllUsers = async () => {
         const res = await getAllUsers();
@@ -18,6 +22,30 @@ const page = () => {
     const fetchAllPosts = async () => {
         const res = await getAllPosts();
         return res;
+    }
+
+    const getAdmin = async () => {
+        const res = await getUser(userId);
+        return res;
+    }
+
+    const { isLoading: adminIsLoading, data: adminData, error: adminError } = useQuery(
+        {
+            queryKey: ['getUser'],
+            queryFn: getAdmin,
+        }
+    );
+
+    if (adminIsLoading) {
+        return <BlankState variant="loading" title="Authorizing" body="It shouldn't take too long..."></BlankState>
+    }
+
+    if (adminError) {
+        return <BlankState variant="error" title="Error Authorizing" body="Please try again later"></BlankState>
+    }
+
+    if (adminData?.isAdmin == false) {
+        return <BlankState variant="error" title="Unauthorized" body="You are not authorized to view this page"></BlankState>
     }
 
     const { isLoading: userIsLoading, data: userData, error: userError } = useQuery(
