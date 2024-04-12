@@ -1,4 +1,3 @@
-import { SelectedPhoto } from "../posts/[post]/PhotosSelector";
 import { z } from "zod"
 
 export const formRules = {
@@ -36,6 +35,7 @@ interface Post {
     description: string,
     condition: string,
     category: string,
+    location: string,
     ownerUserID: string,
     dateCreated: string
 }
@@ -50,17 +50,38 @@ export const postDefaultValues = {
     postsPictureUrl: []
 }
 
+// if we want actions to run on server this must be http://host.docker.internal
 const domain = 'http://localhost:8080';
-const headers = new Headers({'Content-type': 'application/json'});
+const headers = new Headers({'Content-type': 'multipart/form-data'});
 
-async function processPostsPictureUrl(postsPictureUrl) {
-    return postsPictureUrl.map((selectedPhoto : SelectedPhoto) => {
-        if(!selectedPhoto.file) return selectedPhoto.url
-        
-        // if selected photo has a file, process it (i.e. upload and get url)
-        // TODO
-        return selectedPhoto.url
-    });
+async function setBody(post : Post) {
+    const body = new FormData();
+    body.append("title", post.title);
+    body.append("description", post.description);
+    body.append("category", post.category);
+    body.append("condition", post.condition);
+    body.append("location", post.location);
+    body.append("dateCreated", post.dateCreated);
+    body.append("ownerUserID", post.ownerUserID);
+
+    let i = 0;
+    for(const picture of post.postsPictureUrl) {
+        if(!picture.file) {
+            // here we fetch and existing image from backend and resend it to the backend
+
+            // TODO: may need to find a more efficient process? i.e. not reread the whole image
+            // since we're fetching picture from the browser now we use localhost instead of host.docker.internal
+            const res = await fetch(picture.url.replace('host.docker.internal', 'localhost'));
+            
+            const file = new File([ (await res.blob())], `${i++}`, {type: 'image/*'});
+
+            body.append("images", file);
+        } else {
+            body.append("images", picture.file);
+        }
+    }
+
+    return body;
 }
 
 export async function update(postId : string, post : Post, currentUser : string) {
@@ -69,37 +90,43 @@ export async function update(postId : string, post : Post, currentUser : string)
         throw Error('Current user not is not post owner.');
     }
 
-    // send request to upload photos to get their urls...
-    // TODO!
-    const processedPostsPictureUrl = await processPostsPictureUrl(post.postsPictureUrl);
+    const body = await setBody(post);
 
     // send request to update post
     const response = fetch(`${domain}/posts/${postId}`, {
-        headers,
         mode: 'cors',
         method: 'PUT',
-        body: JSON.stringify({
-            ...post,
-            postsPictureUrl: processedPostsPictureUrl
-        })
+        body: body
     });
 
     return response;
 }
 
-export async function create(post : Post, owner : string) {
-    const processedPostsPictureUrl = await processPostsPictureUrl(post.postsPictureUrl);
-    
+export async function create(post : Post) {    
     const response = fetch(`${domain}/posts`, {
-        headers,
         mode: 'cors',
         method: 'POST',
-        body: JSON.stringify({
-            ...post,
-            ownerUserID: owner,
-            postsPictureUrl: processedPostsPictureUrl,
-            dateCreated: new Date(Date.now())
-        })
+        body: await setBody(post)
+    });
+
+    return response;
+}
+
+export async function destroy(post : string) {
+    const response = fetch(`${domain}/posts/${post}`, {
+        mode: 'cors',
+        method: 'DELETE',
+    });
+
+    return response;
+}
+
+export async function sendMessage(message) {
+    const response = fetch(`${domain}/messages`, {
+        headers: new Headers({'Content-type': 'application/json'}),
+        mode: 'cors',
+        method: 'POST',
+        body: JSON.stringify({...message})
     });
 
     return response;

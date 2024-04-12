@@ -39,3 +39,5 @@ export const fetcher = async (url : string) => {
   // returning json here since 200 response body is json anyway.
   return r.json()
 }
+
+export const domain = 'http://localhost:8080';

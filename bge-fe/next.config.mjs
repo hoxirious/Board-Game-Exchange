@@ -7,6 +7,18 @@ const nextConfig = {
                 hostname: 'cf.geekdo-images.com',
                 port: '',
                 pathname: '/**',
+            },
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '8080',
+                pathname: '/images/**',
+            },
+            {
+                protocol: 'http',
+                hostname: 'host.docker.internal',
+                port: '8080',
+                pathname: '/images/**',
             }
         ]
     }

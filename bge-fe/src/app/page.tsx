@@ -29,7 +29,6 @@ export default async function Home() {
                                     <PostCover
                                         key={post.title}
                                         post={post}
-                                        className=""
                                         postNameClassName="text-white text-center"
                                         postLocationClassName="text-white text-center"
                                     />

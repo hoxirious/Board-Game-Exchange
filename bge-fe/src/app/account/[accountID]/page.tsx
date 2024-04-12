@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { listOfGames } from "@/app/listingView/data/games";
+import { listOfGames } from "@/app/home/data/games";
 
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";

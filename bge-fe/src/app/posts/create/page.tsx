@@ -32,7 +32,8 @@ import {
   } from "@/components/ui/select"
 
 import { formRules, formSchema, create, postDefaultValues } from "@/app/actions/post"
-
+import Cookies from 'js-cookie'
+import { SearchInput, useSuggestionsMutation } from "@/components/bge-advanced-search"
 
 const page = () => {
     const router = useRouter();
@@ -43,14 +44,17 @@ const page = () => {
         }
     })
 
+    const owner = Cookies.get('userId');
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const post = {
-            ...form.getValues()
+            ...form.getValues(),
+            ownerUserID: owner,
+            dateCreated: (new Date(Date.now())).toJSON()
         }
-        console.log(post);
 
         // TODO: change second argument to actual current user.
-        const response = await create(post, '6611a7d7b24cbcd2fbdb83b0');
+        const response = await create(post);
 
         if(response.status === 201) {
             const data = await response.json();
@@ -183,7 +187,13 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel className="text-xl font-semibold">Location</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Search a location" {...field} />
+                                        <div className="w-full relative">
+                                            <SearchInput
+                                                placeholder="Search a location" 
+                                                givenValue={field.value}
+                                                onSave={field.onChange}
+                                                suggestionsMutation={useSuggestionsMutation(`/location-suggestions`)} />
+                                        </div>
                                     </FormControl>
                                     <FormDescription>
                                         <iframe className="w-full aspect-square" src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=%20Edmonton+(Edmonton)&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
