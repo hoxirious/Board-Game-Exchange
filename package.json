@@ -7,6 +7,7 @@
     "sass": "^1.74.1"
   },
   "devDependencies": {
+    "@radix-ui/react-toast": "^1.1.5",
     "@types/bcrypt": "^5.0.2"
   }
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import Providers from "./provider";
 import dynamic from "next/dynamic";
@@ -29,6 +30,7 @@ export default function RootLayout({
                         <Navbar />
                     </div>
                     {children}
+                    <Toaster />
                 </Providers>
             </body>
         </html>
