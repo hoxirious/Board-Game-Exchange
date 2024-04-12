@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import Image from "next/image"
 import bgeLogo from "@/../../public/bgeIcon.svg"
 import { PostCover } from "@/components/postCover"
@@ -67,7 +68,11 @@ export default async function Home() {
                             )}
                         </div>
                     </div>
-                <Button className="w-36 row-span-1 place-self-center md:place-self-start hover:bg-primary-500" variant="default" size="sm">Start Trading Now!</Button>
+                    <Link href="/signin">
+                        <Button className="w-36 row-span-1 place-self-center md:place-self-start" variant="default" size="sm">
+                            Start Trading Now!
+                        </Button>
+                    </Link>
             </div>
             <div className="h-[12%] flex justify-center md:h-[12%]">
                 <Image

@@ -170,7 +170,7 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full bg-primary-400 hover:bg-primary-500">Sign Up</Button>
+                        <Button type="submit" className="w-full bg-primary-400">Sign Up</Button>
                     </form>
                 </Form>
             </div>

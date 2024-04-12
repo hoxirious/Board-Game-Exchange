@@ -132,7 +132,7 @@ const page = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full bg-primary-400 hover:bg-primary-500">Reset Your Password</Button>
+                        <Button type="submit" className="w-full bg-primary-400">Reset Your Password</Button>
                     </form>
                 </Form>
             </div>
