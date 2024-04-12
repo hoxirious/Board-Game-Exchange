@@ -17,14 +17,16 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className={`${inter.className} relative`}>
-        <div className="sticky inset-0 bg-[--page-background] z-20">
-          <NavBar/>
-        </div>
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body className={`${inter.className} relative`}>
+                <Providers>
+                    <div className="sticky inset-0 bg-[--page-background] z-20">
+                        <NavBar />
+                    </div>
+                    {children}
+                </Providers>
+            </body>
+        </html>
+    );
 }
