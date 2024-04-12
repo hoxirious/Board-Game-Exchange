@@ -38,7 +38,7 @@ const page = () => {
     useEffect(() => {
         const userId = Cookies.get('userId');
         if (userId) {
-            router.push('/listingView');
+            router.push('/home');
         }
     }, []);
 

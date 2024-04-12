@@ -44,7 +44,7 @@ const page = () => {
     useEffect(() => {
         const userId = Cookies.get('userId');
         if (userId) {
-            router.push('/listingView');
+            router.push('/home');
         }
     }, []);
 
@@ -61,7 +61,7 @@ const page = () => {
                 if (response.status === 200) {
                     console.log(response.data)
                     Cookies.set('userId', response.data.userId, { expires: Date.now() + (24 * 60 * 60 * 1000) });
-                    router.push('/listingView')
+                    router.push('/home')
                 }
             })
             .catch(error => {
