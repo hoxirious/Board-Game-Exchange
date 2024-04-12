@@ -8,6 +8,7 @@ import NavBarButton from "./components/NavBarButton";
 import bgeIcon from "../../../public/bgeIcon.svg";
 
 import "./NavBar.scss";
+import SideMenu from "../SideMenu/SideMenu";
 import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
 
@@ -38,10 +39,10 @@ const NavBar = () => {
                 icon: <Search/>,
                 link: "/home",
             },
-            {
-                icon: <Menu/>,
-                link: `/account/${userId}`,
-            },
+            // {
+            //     icon: <Menu/>,
+            //     link: `/account/${userId}`,
+            // },
         ],
     }
 
@@ -322,10 +323,20 @@ const NavBar = () => {
             </div>
             <div className="navbar-item navbar-right">
                 {navBarVariant.right.map((item, index) => (
-                    <Link key={index} href={item.link}>
+                    <Link key={index} href={item.link} className="px-1">
                         {item.icon}
                     </Link>
                 ))}
+                <label htmlFor="side-menu-toggle" className="md:hidden block px-1">
+                    <Menu/>
+                </label>
+                <input id="side-menu-toggle" type="checkbox" className="peer hidden"></input>
+                <SideMenu className="fixed z-20 w-full h-full bg-[#ffffff] grid items-center inset-0 w-full h-screen peer-checked:visible peer-checked:opacity-85 opacity-0 invisible transition-opacity transition-visibility duration-300 ease-in-out">
+                </SideMenu>
+            </div>
+
+            <div className="navbar-item navbar-right">
+                {/* Test side menu toggle */}
             </div>
         </div>
     )

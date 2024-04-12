@@ -1,27 +1,32 @@
 import { Button } from "../ui/button"
 import { X } from "lucide-react"
+import Cookies from 'js-cookie'
+import Link from "next/link";
 
-const SideMenu = ({ isOpen, setIsOpen }: { isOpen: Boolean, setIsOpen: Function }) => {
+const SideMenu = ({ className }: { className: String }) => {
     return (
-        <aside className={`fixed z-[999] w-full h-full bg-[#ffffff] grid items-center left-0 transition-opacity duration-300 ease-in-out ${isOpen ? 'opacity-100 top-0' : 'opacity-0 top-[-100%]'}`}>
-            <Button size="icon" onClick={() => setIsOpen(false)} className="absolute top-5 right-6 bg-transparent text-2xl cursor-pointer outline-none">
+        <aside className={className}>
+            {/* Close button.. could be a slot? since `side-menu-toggle` refers to checkbox in*/}
+            <label htmlFor="side-menu-toggle" className="absolute top-5 right-6 bg-transparent text-2xl cursor-pointer outline-none">
                 <X className="text-[#1F292E]"/>
-            </Button>
+            </label>
             <div className="sidebar-wrapper">
                 <div className="sidebar-menu flex flex-col text-xl">
                     <Button variant="link" size='lg' className="text-xl text-[#1F292E]">
-                        Home
+                        <Link href="/home">Home</Link>
                     </Button>
                     <Button variant="link" size='lg' className="text-xl text-[#1F292E]">
-                        Your Account
+                        <Link href={`/account/${Cookies.get('userId')}`}>Your Account</Link>
                     </Button>
                     <Button variant="link" size='lg' className="text-xl text-[#1F292E]">
-                        Messages
+                        <label htmlFor="side-menu-toggle">
+                            <Link href="/inbox">Messages</Link>
+                        </label>
                     </Button>
                 </div>
                 <div className="sidebar-btn mt-8 mx-auto flex">
                     <Button className="mx-auto mt-24" size="lg">
-                        Log out
+                        <Link href="/logout">Log out</Link>
                     </Button>
                 </div>
             </div>
