@@ -5,14 +5,16 @@ import { Button } from '@/components/ui/button';
 import { deletePost, getAllPosts } from '@/endpoints/post.endpoint';
 import { deleteUser, getAllUsers, getUser } from '@/endpoints/user.endpoint';
 import { useQuery, useMutation } from "@tanstack/react-query";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 import { useState } from 'react';
 import Cookies from 'js-cookie';
+import { User } from '@/app/schema/user'
 
 
 const page = () => {
 
     const [userId, setUserId] = useState<string>(Cookies.get('userId') ?? '');
+    const [userTableData, setUserTableData] = useState<User[]>([]);
 
     const fetchAllUsers = async () => {
         const res = await getAllUsers();
@@ -36,14 +38,14 @@ const page = () => {
         }
     );
 
-    const { isLoading: userIsLoading, data: userData, error: userError } = useQuery(
+    const { isLoading: userIsLoading, data: userData, error: userError, refetch: userRefetch } = useQuery(
         {
             queryKey: ['allUsers'],
             queryFn: fetchAllUsers,
         }
     );
 
-    const { isLoading: postIsLoading, data: postData, error: postError } = useQuery(
+    const { isLoading: postIsLoading, data: postData, error: postError, refetch: postRefetch } = useQuery(
         {
             queryKey: ['allPosts'],
             queryFn: fetchAllPosts,
@@ -55,6 +57,7 @@ const page = () => {
     const deletePostHandler = async (postId: string) => {
         try {
             await mutateAsyncPost({ postId: postId })
+            postRefetch();
         }
         catch (error) {
             console.log(error)
@@ -64,6 +67,8 @@ const page = () => {
     const deleteUserHandler = async (userId: string) => {
         try {
             await mutateAsyncUser({ userId: userId })
+            userRefetch();
+            postRefetch()
         }
         catch (error) {
             console.log(error)
@@ -86,59 +91,66 @@ const page = () => {
     { deletePostError && <BlankState variant="error" title="Error Deleting Post" body="Please try again later"></BlankState> }
     { deleteUserError && <BlankState variant="error" title="Error Deleting User" body="Please try again later"></BlankState> }
 
-    return (
-        <div>
-            <Table aria-label="Users Information">
-                <TableHeader>
-                    <TableColumn>Id</TableColumn>
-                    <TableColumn>Email</TableColumn>
-                    <TableColumn>Date Created</TableColumn>
-                    <TableColumn>Location</TableColumn>
-                    <TableColumn>Full Name</TableColumn>
-                    <TableColumn>Profile Picture Url</TableColumn>
-                    <TableColumn>Is Admin?</TableColumn>
-                    <TableColumn>Delete?</TableColumn>
-                </TableHeader>
-                <TableBody>
-                    {userData?.map((user: any) => {
-                        <TableRow>
-                            <TableCell>{user._id}</TableCell>
-                            <TableCell>{user.email}</TableCell>
-                            <TableCell>{user.dateCreated.toString()}</TableCell>
-                            <TableCell>{user.location}</TableCell>
-                            <TableCell>{user.fullName}</TableCell>
-                            <TableCell>{user.profilePictureUrl}</TableCell>
-                            <TableCell>{user.isAdmin.toString()}</TableCell>
-                        </TableRow>
-                    })}
-                </TableBody>
-            </Table>
+    const userRows: User[] = userData!;
 
-            <table>
+    return (
+        <div className="flex flex-col items-start">
+            <h1 className='text-2xl font-bold mt-12 mb-4 m-auto'>Users Information</h1>
+            <table className='border-solid border-2 w-4/5 m-auto'>
                 <tr>
-                    <th>Id</th>
-                    <th>Posts Picture Url</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Condition</th>
-                    <th>Category</th>
-                    <th>Owner Id</th>
-                    <th>Date Created</th>
-                    <th></th>
+                    <th className='border-solid border-2 px-1'>Id</th>
+                    <th className='border-solid border-2 px-1'>Email</th>
+                    <th className='border-solid border-2 px-1'>Date Created</th>
+                    <th className='border-solid border-2 px-1'>Location</th>
+                    <th className='border-solid border-2 px-1'>Full Name</th>
+                    <th className='border-solid border-2 px-1'>Profile Picture Url</th>
+                    <th className='border-solid border-2 px-1'>Is Admin</th>
+                    <th className='border-solid border-2 px-1'></th>
+                </tr>
+                {userData?.map((user: any) => {
+                    return (
+                        <tr>
+                            <td className='border-solid border-2 px-1'>{user._id}</td>
+                            <td className='border-solid border-2 px-1'>{user.email}</td>
+                            <td className='border-solid border-2 px-1'>{user.dateCreated.toString()}</td>
+                            <td className='border-solid border-2 px-1'>{user.location}</td>
+                            <td className='border-solid border-2 px-1'>{user.fullName}</td>
+                            <td className='border-solid border-2 px-1'>{user.profilePictureUrl}</td>
+                            <td className='border-solid border-2 px-1'>{user.isAdmin.toString()}</td>
+                            {
+                                user.isAdmin == false &&
+                                <td className='border-solid border-2 px-1'><Button onClick={() => deleteUserHandler(user._id)}>Delete</Button></td>
+                            }
+                        </tr>
+                    )
+                })}
+            </table>
+            <h1 className='text-2xl font-bold mt-12 mb-4 m-auto'>Posts Information</h1>
+            <table className='border-solid border-2 w-4/5 m-auto'>
+                <tr>
+                    <th className='border-solid border-2 px-1 '>Id</th>
+                    <th className='border-solid border-2 px-1 '>Title</th>
+                    <th className='border-solid border-2 px-1 '>Description</th>
+                    <th className='border-solid border-2 px-1 '>Condition</th>
+                    <th className='border-solid border-2 px-1 '>Category</th>
+                    <th className='border-solid border-2 px-1 '>Owner Id</th>
+                    <th className='border-solid border-2 px-1 '>Date Created</th>
+                    <th className='border-solid border-2 px-1 '></th>
                 </tr>
 
                 {postData?.map((post: any) => {
                     return (
-                        <tr>
-                            <td>{post._id}</td>
-                            <td>{post.postsPictureUrl}</td>
-                            <td>{post.title}</td>
-                            <td>{post.description}</td>
-                            <td>{post.condition}</td>
-                            <td>{post.category}</td>
-                            <td>{post.ownerUserID}</td>
-                            <td>{post.dateCreated}</td>
-                            <td><Button onClick={() => deletePostHandler(post._id)}>Delete</Button></td>
+                        <tr className="w-[20rem]">
+                            <td className='border-solid border-2 px-1'>{post._id}</td>
+                            <td className='border-solid border-2 px-1'>{post.title}</td>
+                            <td className='border-solid border-2 px-1'>
+                                <p title={post.description} className="px-1 truncate w-32 hover:text-clip"> {post.description} </p>
+                            </td>
+                            <td className='border-solid border-2 px-1'>{post.condition}</td>
+                            <td className='border-solid border-2 px-1'>{post.category}</td>
+                            <td className='border-solid border-2 px-1'>{post.ownerUserID}</td>
+                            <td className='border-solid border-2 px-1'>{post.dateCreated}</td>
+                            <td className='border-solid border-2 px-1'><Button onClick={() => deletePostHandler(post._id)}>Delete</Button></td>
                         </tr>
                     )
                 })}
