@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { User } from "../models/db.model";
+import { Post, User } from "../models/db.model";
 import bcryptjs from 'bcryptjs';
 
 export const userRouter = express.Router();
@@ -316,6 +316,11 @@ userRouter.delete("/:id", async (req: Request, res: Response) => {
 
     try {
         const result = await User.findByIdAndDelete(id)
+
+        if (result) {
+            await Post.deleteMany({ 'ownerUserID' : result._id.toString() })
+        }
+
         result
             ? res.status(202).send(result)
             : res.status(400).send({msg: `Failed to remove user with id ${id}`});
