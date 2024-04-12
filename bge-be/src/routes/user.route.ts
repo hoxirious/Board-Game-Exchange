@@ -157,7 +157,7 @@ userRouter.post("/login", async (req: Request, res: Response) => {
         if (user) {
 
             // ignore hash for seeded users
-            if ((user.email == "test_user1@mail.com" || user.email == "test_user2@mail.com") && password == user.password!) {
+            if ((user.email == "test_user1@mail.com" || user.email == "test_user2@mail.com" || user.email == "admin@bge.com") && password == user.password!) {
                 req.session.isLoggedIn = true;
                 req.session.userId = user._id.toString();
 

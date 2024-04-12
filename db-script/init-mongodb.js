@@ -214,6 +214,17 @@ async function seedUserAndPostsAndMessages() {
         });
     }
 
+    users.push({
+        username: 'admin_bge',
+        password: `admin_password`,
+        email: `admin@bge.com`,
+        dateCreated: new Date(Date.now()),
+        location: ``,
+        fullName: `BGE Admin`,
+        profilePictureUrl: ``,
+        isAdmin: true
+    })
+
     let response = db.getCollection('users').insertMany(users);
 
     let userId1 = response['insertedIds'][0].toString();
