@@ -25,6 +25,7 @@ import stopIcon from "../../../public/stop.svg"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import Cookies from "js-cookie"
 import { PasswordInput } from "@/components/ui/password-input"
+import { domain } from "@/lib/utils"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Please enter your email address" }),
@@ -53,7 +54,7 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
-        await axios.post('http://localhost:8080/users/login', {
+        await axios.post(`${domain}/users/login`, {
             "email": values.email,
             "password": values.password
         })

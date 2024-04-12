@@ -4,10 +4,11 @@ import Image from "next/image"
 import bgeLogo from "@/../../public/bgeIcon.svg"
 import { PostCover } from "@/components/postCover"
 import axios from "axios";
+import { domain } from "@/lib/utils"
 
 export default async function Home() {
 
-    const response = await axios.get("http://host.docker.internal:8080/posts/")
+    const response = await axios.get(`${domain}/posts/`)
     const postsList = response.data
 
     return (

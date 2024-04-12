@@ -1,3 +1,4 @@
+import { domain } from '@/lib/utils';
 import axios, { AxiosError, AxiosHeaders, AxiosResponse, AxiosResponseTransformer } from 'axios';
 
 export enum RequestMethod {
@@ -18,7 +19,7 @@ export const FetchAxios = async <T>(
     try {
         const response = await axios.request<T>({
             method,
-            url: `http://localhost:8080/${url}`,
+            url: `${domain}/${url}`,
             data,
             ...options,
             validateStatus: () => {

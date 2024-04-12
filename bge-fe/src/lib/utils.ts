@@ -49,4 +49,4 @@ export const generateRoomId = (userId1: string, userId2: string, postId: string)
     }
 }
 
-export const domain = 'http://localhost:8080';
+export const domain = 'https://ed79-2001-56a-7423-1d00-1d05-3c80-aa07-206.ngrok-free.app';

@@ -26,6 +26,7 @@ import stopIcon from "../../../public/stop.svg"
 import "../style.css"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import { PasswordInput } from "@/components/ui/password-input"
+import { domain } from "@/lib/utils"
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -55,7 +56,7 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
-        await axios.put(`http://localhost:8080/users/update/${values.email}`, {
+        await axios.put(`${domain}/users/update/${values.email}`, {
             "password": values.password
         }).then(response => {
             if(response.status === 200) {

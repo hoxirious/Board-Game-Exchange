@@ -26,6 +26,7 @@ import bgeIcon from "../../../public/bge.svg"
 import stopIcon from "../../../public/stop.svg"
 import "../style.css"
 import { PasswordInput } from "@/components/ui/password-input"
+import { domain } from "@/lib/utils"
 
 const formSchema = z.object({
     username: z.string().min(2, {message: "Please choose a username"}).max(50),
@@ -70,7 +71,7 @@ const page = () => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
-        await axios.post('http://localhost:8080/users/signup', {
+        await axios.post(`${domain}/users/signup`, {
             "username":values.username,
             "password" : values.password,
             "email": values.email,
