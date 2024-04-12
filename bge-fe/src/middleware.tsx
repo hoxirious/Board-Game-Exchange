@@ -5,7 +5,9 @@ export const config = {
     matcher: [
         '/posts/(.*)/edit',
         '/posts/create',
-        '/logout'
+        '/inbox',
+        '/logout',
+        '/admin'
     ],
 }
 
