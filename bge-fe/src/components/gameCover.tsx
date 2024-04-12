@@ -19,7 +19,7 @@ export function GameCover({
         <section className={cn("", className)} {...props}>
             <div>
                 <Image
-                    src={game.postsPictureUrl[0]}
+                    src={game.postsPictureUrl && game.postsPictureUrl.length > 1 ? game.postsPictureUrl[0] : ''}
                     alt={game.name}
                     width={200}
                     height={200}

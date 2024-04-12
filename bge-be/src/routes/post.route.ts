@@ -153,7 +153,7 @@ postRouter.post("/", upload.array('images', 10), async (req: Request, res: Respo
             const results = await Image.insertMany(images);
 
             for (const i in results) {
-                imageUrls.push(`http://localhost:8080/images/download/${results[i]._id.toString()}`);
+                imageUrls.push(`http://host.docker.internal:8080/images/download/${results[i]._id.toString()}`);
             }
         }
     } catch (error: any) {
@@ -164,6 +164,7 @@ postRouter.post("/", upload.array('images', 10), async (req: Request, res: Respo
 
     try {
         req.body.postsPictureUrl = imageUrls;
+        console.log(req.body);
         const result = await Post.create(req.body);
         result
             ? res.status(201).send(result)
@@ -208,7 +209,7 @@ postRouter.put("/:id", upload.array('images', 10), async (req: Request, res: Res
             const results = await Image.insertMany(images);
 
             for (const i in results) {
-                imageUrls.push(`http://localhost:8080/images/download/${results[i]._id.toString()}`);
+                imageUrls.push(`http://host.docker.internal:8080/images/download/${results[i]._id.toString()}`);
             }
         }
     } catch (error: any) {

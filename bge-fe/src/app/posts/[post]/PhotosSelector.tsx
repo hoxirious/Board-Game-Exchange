@@ -22,13 +22,52 @@ const PhotosSelector = (
     function handleSelectPhotos(e) {
         const newPhotos : SelectedPhoto[] = [];
         const length = e.target.files.length;
+
+        // TODO: refactor can be used by handleDrop too
         for(let i = 0; i < length; i++) {
-            newPhotos.push({ 
-                file: e.target.files[i],    
-                url: URL.createObjectURL(e.target.files[i])
-            });
+            const file = e.target.files[i]
+            const fileSizeKB = file.size / 1024
+            if (fileSizeKB <= 1) {
+                newPhotos.push({ 
+                    file: e.target.files[i],    
+                    url: URL.createObjectURL(e.target.files[i])
+                });
+            }
+            else {
+                alert('File size exceeds 1MB limit')
+            }
         }
     
+        setSelectedPhotos((oldPhotos) => [...oldPhotos, ...newPhotos]);
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+
+        const newPhotos : SelectedPhoto[] = [];
+
+        if (e.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            [...e.dataTransfer.items].forEach((item, i) => {
+                // If dropped items aren't files, reject them
+                if (item.kind === "file") {
+                const file = item.getAsFile();
+                newPhotos.push({ 
+                    file: file,    
+                    url: URL.createObjectURL(file)
+                });
+                }
+            });
+        } else {
+            // Use DataTransfer interface to access the file(s)
+            [...e.dataTransfer.files].forEach((file, i) => {
+                newPhotos.push({ 
+                    file: file,    
+                    url: URL.createObjectURL(file)
+                });
+            });
+        }
+
         setSelectedPhotos((oldPhotos) => [...oldPhotos, ...newPhotos]);
     }
     
@@ -56,7 +95,10 @@ const PhotosSelector = (
                 <h2 className="text-xl font-semibold">Photos</h2>
                 <span className="text-sm">{selectedPhotos.length}/10</span>
             </div>
-            <div className="grid content-center bg-white w-full p-8 text-center rounded border border-black border-dashed md:aspect-[4/3]">
+            <div
+                onDragOver={(e) => {e.preventDefault();}} 
+                onDrop={(e) => {handleDrop(e)}} 
+                className="grid content-center bg-white w-full p-8 text-center rounded border border-black border-dashed md:aspect-[4/3]">
                 <ImagePlus className="w-16 h-16 mb-2 mx-auto" />
                 <div>
                     <div className="hidden md:block w-fit mx-auto">

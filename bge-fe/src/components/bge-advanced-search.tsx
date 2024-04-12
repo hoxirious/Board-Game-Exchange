@@ -27,7 +27,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 
-import { debounce } from "@/lib/utils"
+import { debounce, domain } from "@/lib/utils"
 
 const QUERY_TITLES = {
     board_games: "What do you want?",
@@ -62,12 +62,10 @@ function SuggestionsList({ data, className, onSelect }) {
     }
 }
 
-function useSuggestionsMutation(route) {
+export function useSuggestionsMutation(route) {
     // TODO: refactor.. lot has changed since i first wrote this (e.g. no api yet, 
     // barely know how SWR works)
     if(route === '/boardGames/titles') {
-
-        const domain = 'http://localhost:8080';
         const fetcher = (url, { arg }) => {
             if(arg.value === '') return [];
 
@@ -254,7 +252,7 @@ function SearchQueryForm({ query, onSearch, onSelectCategory, onSelectCondition 
     );
 }
 
-function SearchInput({ givenValue, onSave, placeholder, suggestionsMutation }) {
+export function SearchInput({ givenValue, onSave, placeholder, suggestionsMutation }) {
     const [showSuggestionsList, setShowSuggestionsList] = useState(false);
     const [inputValue, setInputValue] = useState([givenValue]);
     useEffect(() => {
@@ -330,7 +328,6 @@ function SearchQueryFormDesktop({ query, onSave, onSelectCategory }) {
                             placeholder="Board games you want"
                             givenValue={query.board_games}
                             onSave={(value) => onSave(QUERY_TITLES.board_games, value)}
-                            // TODO: change endpoint
                             suggestionsMutation={useSuggestionsMutation(`/boardGames/titles`)} />
                     </div>
                     <CategorySelect query={query} onSelect={(e) => onSelectCategory(e)}></CategorySelect>

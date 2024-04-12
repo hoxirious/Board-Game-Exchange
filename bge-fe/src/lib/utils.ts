@@ -48,3 +48,5 @@ export const generateRoomId = (userId1: string, userId2: string, postId: string)
         return userId2 + userId1 + postId;
     }
 }
+
+export const domain = 'http://localhost:8080';

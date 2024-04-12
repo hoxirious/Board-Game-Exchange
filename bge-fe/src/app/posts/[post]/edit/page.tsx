@@ -34,6 +34,10 @@ import {
 import { boardGameCategories, boardGameConditions } from "@/app/schema/boardGame"
 
 import { formSchema, formRules, postDefaultValues, update } from '@/app/actions/post'
+import { SearchInput, useSuggestionsMutation } from "@/components/bge-advanced-search"
+import Cookies from 'js-cookie'
+import { BlankState } from "@/components/blankState"
+import { domain } from "@/lib/utils"
 
 function handleSelectChange(value, field) {
     // if value is empty, dont change?
@@ -46,7 +50,7 @@ function handleSelectChange(value, field) {
 const page = ({ params }: { params: { post: string } }) => {
     const fetcher = (url) => fetch(url).then(res => res.json());
     const router = useRouter();
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/posts/${params.post}`, fetcher);
+    const { data, error, isLoading } = useSWR(`${domain}/posts/${params.post}`, fetcher);
 
     const [ defaultPhotos, setDefaultPhotos ] = useState<SelectedPhoto>([]);
 
@@ -60,12 +64,19 @@ const page = ({ params }: { params: { post: string } }) => {
     useEffect(() => {
         if(!data) return
 
+        // redirect if user doesn't own the page
+        if(data.ownerUserID !== Cookies.get('userId')) {
+            router.push('/home');
+        }
+
         // actually sets the data on initial load.
         form.reset(data);
 
         // add existing photos to selected photos
         // difference between existing and new photos is a file property
         setDefaultPhotos(() => {
+            if(!data.postsPictureUrl) return;
+
             return data.postsPictureUrl.map(pictureUrl => ({
                 url: pictureUrl,
                 file: null
@@ -74,10 +85,26 @@ const page = ({ params }: { params: { post: string } }) => {
 
     }, [data]);
 
-    if(isLoading) {
+    if(isLoading) { 
         return (
-            <div>Loading</div>
-        );
+            <BlankState variant="loading" title="Loading this post" body="It shouldn't take too long..."></BlankState>
+        )
+    }
+
+    if(error) {
+        if(error.status === 404) {
+            return (
+                <BlankState variant="404" title="We could not find this post." body={
+                    <Button asChild>
+                        <Link href="/posts">Look for other posts</Link>
+                    </Button>
+                }></BlankState>
+            );
+        }
+
+        return (
+            <BlankState variant="error" title="Oopsie Daisy..." body="Something went really wrong. Please try again later. Or, contact us."></BlankState>
+        )
     }
 
     // 2. Define a submit handler.
@@ -219,7 +246,13 @@ const page = ({ params }: { params: { post: string } }) => {
                                 <FormItem>
                                     <FormLabel className="text-xl font-semibold">Location</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Search a location" {...field} />
+                                        <div className="w-full relative">
+                                            <SearchInput
+                                                placeholder="Search a location" 
+                                                givenValue={field.value}
+                                                onSave={field.onChange}
+                                                suggestionsMutation={useSuggestionsMutation(`/location-suggestions`)} />
+                                        </div>
                                     </FormControl>
                                     <FormDescription>
                                         <iframe className="w-full aspect-square" src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=%20Edmonton+(Edmonton)&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
