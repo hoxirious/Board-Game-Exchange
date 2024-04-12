@@ -1,9 +1,11 @@
 import { Message, PostMessage } from "@/app/schema/message";
 import { FetchAxios, RequestMethod } from "./lib";
 
-export async function getUserMessages(userId: string): Promise<PostMessage[]| undefined> {
+// type MessageResponse = (string | (string | any[])[][])[][];
 
-    const result = FetchAxios<PostMessage[]>(`messages/${userId}`, RequestMethod.GET);
+export async function getUserMessages(userId: string): Promise<(any | undefined)> {
+
+    const result = FetchAxios<any>(`messages/${userId}`, RequestMethod.GET);
     return result;
 
 }

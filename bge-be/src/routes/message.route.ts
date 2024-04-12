@@ -31,6 +31,7 @@ messageRouter.get("/:userId", async (req: Request, res: Response) => {
 
         const messages = receivedMessages.concat(sentMessages)
 
+
         const groupedMessages: { [postId: string]: { [externalUserId: string]: any[] } } = {};
 
         messages.forEach((message) => {
@@ -62,10 +63,13 @@ messageRouter.get("/:userId", async (req: Request, res: Response) => {
             }
         }
 
-        res.status(200).send([groupedMessages]);
+        let arrayGroupedMessages = Object.keys(groupedMessages).map((key) => [key, Object.keys(groupedMessages[key]).map(subKey => [subKey, groupedMessages[key][subKey]])]);
+
+
+        res.status(200).send(arrayGroupedMessages);
     } catch (error: any) {
         console.error(error.message);
-        res.status(404).send({msg: `Messages for userID ${userId} do not exist`});
+        res.status(404).send({ msg: `Messages for userID ${userId} do not exist` });
     }
 })
 
@@ -94,9 +98,9 @@ messageRouter.post("/", async (req: Request, res: Response) => {
         const result = await Message.create(req.body);
         result
             ? res.status(201).send(result)
-            : res.status(500).send({msg: "Failed to create a new message"});
+            : res.status(500).send({ msg: "Failed to create a new message" });
     } catch (error: any) {
         console.error(error.message);
-        res.status(400).send({msg: "Failed to create a new message"});
+        res.status(400).send({ msg: "Failed to create a new message" });
     }
 })

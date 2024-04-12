@@ -13,5 +13,5 @@ const Message = z.object({
 export type Message = z.infer<typeof Message>;
 
 
-const PostMessage = z.record( z.string(), z.record(z.string(), z.array(Message)));
+const PostMessage = z.array( z.string(), z.array(z.string(), z.array(Message)));
 export type PostMessage = z.infer<typeof PostMessage>;

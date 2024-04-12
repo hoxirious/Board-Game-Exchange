@@ -10,34 +10,33 @@ import Cookies from 'js-cookie';
 import io from 'socket.io-client';
 import { generateRoomId } from "@/lib/utils";
 import './ChatPage.scss'
+import { ChatObj } from "@/app/inbox/page";
+import { Post } from "@/app/schema/Post";
+import { User } from "@/app/schema/user";
 
 
 interface ChatPageProps {
-    postId: string,
-    receiverName: string,
-    receiverId: string,
-    location: string,
-    boardGameName: string,
-    messages: Message[];
-
+    selectedChatObj: ChatObj,
+    externalUsers: Map<string, User>,
+    posts: Map<string, Post>
 }
 
 const socket = io('ws://localhost:8000', { transports: ['websocket'] });
-export default function ChatPage({ postId, receiverName, receiverId, location, boardGameName, messages: cxtMessages }: ChatPageProps) {
+export default function ChatPage({ selectedChatObj, externalUsers, posts }: ChatPageProps) {
 
     const [userId, setUserId] = useState<string>(Cookies.get('userId') ?? '');
-    const [messages, setMessages] = useState<Message[]>(cxtMessages);;
+    const [messages, setMessages] = useState<Message[]>(selectedChatObj.messsages);;
     const [input, setInput] = useState<string>('');
-    const [roomId, setRoomId] = useState<string>(generateRoomId(userId, receiverId, postId));
+    const [roomId, setRoomId] = useState<string>(generateRoomId(userId, selectedChatObj.externalUserId, selectedChatObj.postId));
 
     const sendMessage = () => {
         socket.emit('message',
             {
                 timestamp: new Date(),
                 text: input,
-                postId: postId,
+                postId: selectedChatObj.postId,
                 senderUserID: userId,
-                receiverUserID: receiverId,
+                receiverUserID: selectedChatObj.externalUserId,
                 hasReceiverSeen: false,
             },
             roomId
@@ -48,7 +47,7 @@ export default function ChatPage({ postId, receiverName, receiverId, location, b
 
 
     useEffect(() => {
-        setRoomId(generateRoomId(userId, receiverId, postId));
+        setRoomId(generateRoomId(userId, selectedChatObj.externalUserId, selectedChatObj.postId));
         socket.on('connect', () => {
             console.log('connected');
         });
@@ -75,7 +74,7 @@ export default function ChatPage({ postId, receiverName, receiverId, location, b
         return () => {
         }
 
-    }, [receiverId, userId, postId])
+    }, [selectedChatObj, userId])
 
     return (
         <div className="h-full w-full">
@@ -85,9 +84,9 @@ export default function ChatPage({ postId, receiverName, receiverId, location, b
                     <Image src={bgeIcon} alt="avatar" width={200} className="col-span-1" />
                     <div className="col-span-2 text-left">
                         <div className="text-black">
-                            <div className="text-sm font-bold text-black">{receiverName}</div>
-                            <div className="text-sm text-black">{boardGameName}</div>
-                            <div className="text-sm text-black">{location}</div>
+                            <div className="text-sm font-bold text-black">{externalUsers.get(selectedChatObj.externalUserId)?.fullName}</div>
+                            <div className="text-sm text-black">{posts.get(selectedChatObj.postId)?.title}</div>
+                            <div className="text-sm text-black">{externalUsers.get(selectedChatObj.externalUserId)?.location}</div>
                         </div>
                     </div>
                 </div>

@@ -5,6 +5,8 @@ import { Input } from "../ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { PostMessage } from "@/app/schema/message";
 import { User } from "@/app/schema/user";
+import { ChatObj } from "@/app/inbox/page";
+import { Post } from "@/app/schema/Post";
 
 function SearchInputWithIcon() {
     return (
@@ -18,11 +20,12 @@ function SearchInputWithIcon() {
 }
 
 interface ChatListPageProps {
-    receivers: (User & { text: string, isUnread: boolean })[]
+    chatObjs: ChatObj[],
+    externalUsers: Map<string, User>,
+    posts: Map<string, Post>
 }
 
-export default function ChatListPage({ receivers }: ChatListPageProps) {
-
+export default function ChatListPage({ chatObjs, externalUsers, posts}: ChatListPageProps) {
     return (
         <div className="px-4 h-full">
             <div className="border-b-2 h-[15dvh]">
@@ -32,12 +35,12 @@ export default function ChatListPage({ receivers }: ChatListPageProps) {
                 </div>
             </div>
             <div className="overflow-y-auto h-[85dvh]">
-                {receivers && receivers.map((item, index) => {
+                {chatObjs && chatObjs.map((item, index) => {
                     return (
                         <ChatItem key={`${index}_${new Date().getTime()}`} userSentTo={{
-                            name: item.fullName,
-                            location: item.location == "" ? "New York" : item.location
-                        }} latestMessage={item.text} isUnread={item.isUnread} />
+                            name: externalUsers.get(item.externalUserId)?.fullName ?? "Not available",
+                            location: externalUsers.get(item.externalUserId)?.location ?? "Not available",
+                        }} isUnread={false} boardGame={posts.get(item.postId)?.title ?? "Not available"} />
                     )
                 })}
             </div>

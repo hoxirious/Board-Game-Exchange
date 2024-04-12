@@ -7,8 +7,8 @@ interface ChatUser {
 }
 export interface ChatItemProps {
     userSentTo: ChatUser;
-    latestMessage: string;
     isUnread: boolean;
+    boardGame: string;
 }
 
 export default function ChatItem(item: ChatItemProps) {
@@ -19,10 +19,9 @@ export default function ChatItem(item: ChatItemProps) {
             <div className="col-span-3 text-left">
                 <div className="pb-2">
                     <div className="text-sm font-bold">{item.userSentTo.name}</div>
-                    <div className="text-lg">{item.userSentTo.location}</div>
+                    <div className="text-lg">{item.boardGame}</div>
                     <div className="">{item.userSentTo.location}</div>
                 </div>
-                <p className="text-lg font-bold truncate">{item.latestMessage}</p>
             </div>
             {
                 item.isUnread &&
