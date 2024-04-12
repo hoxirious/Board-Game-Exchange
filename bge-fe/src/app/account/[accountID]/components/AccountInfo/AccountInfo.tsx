@@ -115,7 +115,7 @@ const AccountInfo = ({ accountID, setIsSheetOpen, userData, searchQuery, setSear
                         <div className="account-info-listings-count font-thin">{activeListings} active listings</div>
                     </div>
                 </div>
-                {actionButtons}
+                {userId ? (actionButtons) : null}
                 <div className="mx-4 mt-4">
                     {showMessageForm && messageForm()}
                 </div>             
