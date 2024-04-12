@@ -3,9 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import axios from "axios"
+import Cookies from "js-cookie"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -41,6 +42,14 @@ const formSchema = z.object({
 
 const page = () => {
     const router = useRouter();
+
+    useEffect(() => {
+        const userId = Cookies.get('userId');
+        if (userId) {
+            router.push('/listingView');
+        }
+    }, []);
+
     var today = new Date()
     var todayISO = today.toISOString()
     const form = useForm<z.infer<typeof formSchema>>({

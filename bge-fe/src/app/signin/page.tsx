@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 
 import { Button } from "@/components/ui/button"
@@ -41,9 +41,15 @@ const page = () => {
         }
     })
 
+    useEffect(() => {
+        const userId = Cookies.get('userId');
+        if (userId) {
+            router.push('/listingView');
+        }
+    }, []);
+
     const [visible, setVisible] = useState(false)
     const [isShow, setShow] = useState(false)
-    const [userId, setUserId] = useState<string>('');
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
