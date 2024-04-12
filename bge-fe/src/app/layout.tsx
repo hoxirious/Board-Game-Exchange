@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/components/NavBar/NavBar";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Providers from "./provider";
+import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,12 +16,17 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
+    const Navbar = dynamic(() => import("@/components/NavBar/NavBar"), {
+        ssr: false,
+    });
+
     return (
         <html lang="en">
             <body className={`${inter.className} relative`}>
                 <Providers>
                     <div className="sticky inset-0 bg-[--page-background] z-20">
-                        <NavBar />
+                        <Navbar />
                     </div>
                     {children}
                 </Providers>
