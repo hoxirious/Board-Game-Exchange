@@ -26,6 +26,10 @@ export function timeAgoHumanReadable(fromDateTime) {
         });
 }
 
+export const headers = new Headers({
+    "ngrok-skip-browser-warning": "69420",
+});
+
 export const fetcher = async (url: string) => {
     const r = await fetch(url, {
         headers: new Headers({

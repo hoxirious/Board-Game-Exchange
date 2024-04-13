@@ -27,7 +27,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 
-import { debounce, domain } from "@/lib/utils"
+import { debounce, domain, headers } from "@/lib/utils"
 
 const QUERY_TITLES = {
     board_games: "What do you want?",
@@ -69,7 +69,9 @@ export function useSuggestionsMutation(route) {
         const fetcher = (url, { arg }) => {
             if(arg.value === '') return [];
 
-            return fetch(`${url}/${arg.value}`)
+            return fetch(`${url}/${arg.value}`, {
+                headers: headers
+            })
                 .then(async (response) => {
 
                     const data = await response.json();
@@ -84,7 +86,9 @@ export function useSuggestionsMutation(route) {
         const fetcher = (url, { arg }) => {
             if(arg.value === '') return [];
 
-            return fetch(`${url}?q=${arg.value}&num=5`)
+            return fetch(`${url}?q=${arg.value}&num=5`, {
+                headers: headers
+            })
                 .then(async (response) => {
                     const data = await response.json();
                     return data.items.map((item) => item.name);
