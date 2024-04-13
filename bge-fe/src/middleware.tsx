@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { frontendDomain } from "./lib/utils";
 
 export const config = {
     matcher: [
@@ -11,7 +12,7 @@ export const config = {
     ],
 }
 
-const domain = "https://924c-2604-3d09-280-f20-7c1c-843f-e32d-5fc9.ngrok-free.app/";
+const domain = frontendDomain;
 
 export async function middleware(request: NextRequest) {
     const currentUser = request.cookies.get("userId")?.value;
