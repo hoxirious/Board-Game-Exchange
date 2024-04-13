@@ -35,8 +35,14 @@ mongodb://admin:password@localhost:27017/
 
 - Go into `bge-db` table and check for the mockup data inside any of the collections
 
-- To bring the containers down, run this:
+- To bring the containers down and clear the database volume, run this:
+
 ```
 docker compose down -v
 ```
 
+- Othewise, if you want data to persist, run this:
+
+```
+docker compose down
+```
