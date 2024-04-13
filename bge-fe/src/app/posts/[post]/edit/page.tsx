@@ -31,6 +31,8 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 
+import Link from "next/link"
+
 import { boardGameCategories, boardGameConditions } from "@/app/schema/boardGame"
 
 import { formSchema, formRules, postDefaultValues, update } from '@/app/actions/post'
@@ -263,7 +265,9 @@ const page = ({ params }: { params: { post: string } }) => {
                             
                             <div className="flex justify-between py-4">
                                 {/* TODO: implement cancel */}
-                                <Button variant="outline" type="button" className="px-12">Cancel</Button>
+                                <Button variant="outline" type="button" className="px-12">
+                                    <Link href="/posts">Cancel</Link>
+                                </Button>
                                 <Button type="submit" className="px-12">Save</Button>
                             </div>
                         </section>

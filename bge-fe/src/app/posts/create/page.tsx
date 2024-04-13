@@ -34,6 +34,7 @@ import {
 import { formRules, formSchema, create, postDefaultValues } from "@/app/actions/post"
 import Cookies from 'js-cookie'
 import { SearchInput, useSuggestionsMutation } from "@/components/bge-advanced-search"
+import Link from "next/link"
 
 const page = () => {
     const router = useRouter();
@@ -205,7 +206,9 @@ const page = () => {
                             
                             <div className="flex justify-between py-4">
                                 {/* TODO: implement cancel */}
-                                <Button variant="outline" type="button" className="px-12">Cancel</Button>
+                                <Button variant="outline" type="button" className="px-12">
+                                    <Link href="/posts">Cancel</Link>
+                                </Button>
                                 <Button type="submit" className="px-12">Post</Button>
                             </div>
                         </section>
