@@ -68,11 +68,13 @@ export default async function Home() {
                             )}
                         </div>
                     </div>
-                    <Link href="/signin">
-                        <Button className="w-36 row-span-1 place-self-center md:place-self-start" variant="default" size="sm">
-                            Start Trading Now!
-                        </Button>
-                    </Link>
+                    <div className="flex justify-center md:place-self-start md:justify-start row-span-1">
+                        <Link href="/signin">
+                            <Button className="w-36" variant="default" size="sm">
+                                Start Trading Now!
+                            </Button>
+                        </Link>
+                    </div>
             </div>
             <div className="h-[12%] flex justify-center md:h-[12%]">
                 <Image
