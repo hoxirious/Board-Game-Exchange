@@ -106,10 +106,10 @@ connectToDatabase()
                 // persist message to database
                 try {
                     console.log("persisting message", msg);
+                    io.in(roomId).emit('message', msg);
+                    // broadcast message to room
                     const result = await Message.create(msg);
                     console.log("Socket is in this room: ", socket.rooms);
-                    io.in(roomId).emit('message', msg);
-                    // broadcast message to room but sender
                     console.log("Broadcasted message to room", roomId);
                 }
                 catch (error) {
