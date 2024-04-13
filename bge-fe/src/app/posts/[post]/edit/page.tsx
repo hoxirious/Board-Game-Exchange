@@ -86,7 +86,7 @@ const page = ({ params }: { params: { post: string } }) => {
 
     }, [data]);
 
-    if(isLoading) { 
+    if(isLoading) {
         return (
             <BlankState variant="loading" title="Loading this post" body="It shouldn't take too long..."></BlankState>
         )
@@ -97,7 +97,7 @@ const page = ({ params }: { params: { post: string } }) => {
             return (
                 <BlankState variant="404" title="We could not find this post." body={
                     <Button asChild>
-                        <Link href="/posts">Look for other posts</Link>
+                        <Link href="/home">Look for other posts</Link>
                     </Button>
                 }></BlankState>
             );
@@ -114,7 +114,7 @@ const page = ({ params }: { params: { post: string } }) => {
             ...form.getValues()
         }
         console.log(post);
-        
+
         // TODO: change second argument to actual current user.
         const response = await update(data._id, post, data.ownerUserID);
 
@@ -220,7 +220,7 @@ const page = ({ params }: { params: { post: string } }) => {
                                                 <LayoutGrid/>
                                                 <span>Category</span>
                                             </FormLabel>
-                                            
+
                                             <Select name={field.name} onValueChange={(value) => handleSelectChange(value, field)} value={field.value}>
                                                 <FormControl>
                                                     <div className="flex-grow">
@@ -249,7 +249,7 @@ const page = ({ params }: { params: { post: string } }) => {
                                     <FormControl>
                                         <div className="w-full relative">
                                             <SearchInput
-                                                placeholder="Search a location" 
+                                                placeholder="Search a location"
                                                 givenValue={field.value}
                                                 onSave={field.onChange}
                                                 suggestionsMutation={useSuggestionsMutation(`/location-suggestions`)} />
@@ -262,11 +262,11 @@ const page = ({ params }: { params: { post: string } }) => {
                                 </FormItem>
                             )}
                             />
-                            
+
                             <div className="flex justify-between py-4">
                                 {/* TODO: implement cancel */}
                                 <Button variant="outline" type="button" className="px-12">
-                                    <Link href="/posts">Cancel</Link>
+                                    <Link href="/home">Cancel</Link>
                                 </Button>
                                 <Button type="submit" className="px-12">Save</Button>
                             </div>

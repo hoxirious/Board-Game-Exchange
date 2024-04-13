@@ -4,12 +4,12 @@ import Image from "next/image";
 import bgeIcon from "@/../public/bgeIcon.svg";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ChevronLeft, SendHorizontal } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Message, PostMessage } from "@/app/schema/message";
+import { Message } from "@/app/schema/message";
 import Cookies from 'js-cookie';
 import io from 'socket.io-client';
-import { generateRoomId } from "@/lib/utils";
+import { generateRoomId, wsDomain } from "@/lib/utils";
 import './ChatPage.scss'
 import { ChatObj } from "@/app/inbox/page";
 import { Post } from "@/app/schema/Post";
@@ -46,7 +46,8 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts, onBack
     }
 
     useEffect(() => {
-        const socket = io('ws://localhost:8000', { transports: ['websocket'] });
+        const socket = io(`${wsDomain}`, { transports: ['websocket'] });
+
         setWs(socket);
         const newRoomId = generateRoomId(userId, selectedChatObj.externalUserId, selectedChatObj.postId);
         setRoomId(newRoomId);
@@ -69,7 +70,6 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts, onBack
 
         socket.on("disconnect", (reason) => {
             // the reason of the disconnection (voluntary or not)
-            //
             console.log(reason);
         });
 
@@ -90,7 +90,6 @@ export default function ChatPage({ selectedChatObj, externalUsers, posts, onBack
 
             socket.off("disconnect", (reason) => {
                 // the reason of the disconnection (voluntary or not)
-                //
                 console.log(reason);
             });
 

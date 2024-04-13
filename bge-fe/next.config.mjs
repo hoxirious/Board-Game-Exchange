@@ -19,6 +19,12 @@ const nextConfig = {
                 hostname: 'host.docker.internal',
                 port: '8080',
                 pathname: '/images/**',
+            },
+            {
+                protocol: 'https',
+                hostname: '7bfe-2001-56a-7423-1d00-7926-7347-5d50-d018.ngrok-free.app',
+                port: '',
+                pathname: '/images/**',
             }
         ]
     },

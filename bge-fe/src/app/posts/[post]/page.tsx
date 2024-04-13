@@ -37,7 +37,7 @@ const page = ({ params }: { params: { post: string } }) => {
             return (
                 <BlankState variant="404" title="We could not find this post." body={
                     <Button asChild>
-                        <Link href="/posts">Look for other posts</Link>
+                        <Link href="/home">Look for other posts</Link>
                     </Button>
                 }></BlankState>
             );
@@ -77,7 +77,7 @@ const page = ({ params }: { params: { post: string } }) => {
                     <label htmlFor="contact_message">
                         <h2 className="text-lg font-bold">Contact the poster</h2>
                     </label>
-                    <textarea 
+                    <textarea
                         id="contact_message"
                         placeholder="Type your message to the trader here."
                         onChange={(e) => {setMessage(e.target.value)}}
@@ -110,7 +110,7 @@ const page = ({ params }: { params: { post: string } }) => {
                                 <CarouselItem key={index}>
                                     <Card>
                                         <CardContent className="relative aspect-square overflow-hidden">
-                                            <Image 
+                                            <Image
                                             className="object-contain"
                                             src={pictureUrl}
                                             fill={true}

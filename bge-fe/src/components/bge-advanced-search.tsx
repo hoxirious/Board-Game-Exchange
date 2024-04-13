@@ -63,7 +63,7 @@ function SuggestionsList({ data, className, onSelect }) {
 }
 
 export function useSuggestionsMutation(route) {
-    // TODO: refactor.. lot has changed since i first wrote this (e.g. no api yet, 
+    // TODO: refactor.. lot has changed since i first wrote this (e.g. no api yet,
     // barely know how SWR works)
     if(route === '/boardGames/titles') {
         const fetcher = (url, { arg }) => {
@@ -86,9 +86,7 @@ export function useSuggestionsMutation(route) {
         const fetcher = (url, { arg }) => {
             if(arg.value === '') return [];
 
-            return fetch(`${url}?q=${arg.value}&num=5`, {
-                headers: headers
-            })
+            return fetch(`${url}?q=${arg.value}&num=5`)
                 .then(async (response) => {
                     const data = await response.json();
                     return data.items.map((item) => item.name);
@@ -175,7 +173,7 @@ function CategorySelect({ query, onSelect }) {
     function toggleAndGet(category, checked) {
         console.log(category);
         console.log(checked);
-        setCategories((o) => { 
+        setCategories((o) => {
             if(checked) {
                 o.delete(category);
                 return o;

@@ -11,7 +11,7 @@ export const config = {
     ],
 }
 
-const domain = "http://localhost:3000";
+const domain = "https://924c-2604-3d09-280-f20-7c1c-843f-e32d-5fc9.ngrok-free.app/";
 
 export async function middleware(request: NextRequest) {
     const currentUser = request.cookies.get("userId")?.value;

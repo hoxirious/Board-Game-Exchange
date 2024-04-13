@@ -1,20 +1,7 @@
-import { SearchIcon } from "lucide-react";
-import ChatItem, { ChatItemProps } from "./components/ChatItem";
-import { Input } from "../ui/input";
+import ChatItem from "./components/ChatItem";
 import { User } from "@/app/schema/user";
 import { ChatObj } from "@/app/inbox/page";
 import { Post } from "@/app/schema/Post";
-
-function SearchInputWithIcon() {
-    return (
-        <div className="flex flex-row items-center ">
-            <div className="bg-gray-300 w-10 h-10 rounded-sm flex justify-center items-center">
-                <SearchIcon />
-            </div>
-            <Input className="w-full" placeholder="Search inbox" />
-        </div>
-    )
-}
 
 interface ChatListPageProps {
     chatObjs: ChatObj[],
@@ -28,9 +15,6 @@ export default function ChatListPage({ chatObjs, externalUsers, posts, setExtern
         <div className="h-full">
             <div className="border-b-2 p-4">
                 <h1 className="text-5xl font-bold m-4">Inbox</h1>
-                {/* <div className="pb-2">
-                    <SearchInputWithIcon />
-                </div> */}
             </div>
             <div className="overflow-y-auto h-[85dvh]">
                 {chatObjs && chatObjs.map((item, index) => {

@@ -32,7 +32,7 @@ const page = () => {
             return (
                 <BlankState variant="404" title="We could not find this post." body={
                     <Button asChild>
-                        <Link href="/posts">Look for other posts</Link>
+                        <Link href="/home">Look for other posts</Link>
                     </Button>
                 }></BlankState>
             );

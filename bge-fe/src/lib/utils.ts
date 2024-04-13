@@ -57,4 +57,5 @@ export const generateRoomId = (userId1: string, userId2: string, postId: string)
     }
 }
 
-export const domain = 'http://localhost:8080';
+export const domain = 'https://7bfe-2001-56a-7423-1d00-7926-7347-5d50-d018.ngrok-free.app';
+export const wsDomain = 'https://lucky-loops-appear.loca.lt';

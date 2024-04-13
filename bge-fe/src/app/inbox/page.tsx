@@ -2,8 +2,8 @@
 import ChatListPage from "@/components/Inbox/ChatListPage";
 import ChatPage from "@/components/Inbox/ChatPage";
 import { getUserMessages } from "@/endpoints/inbox.endpoint";
-import { useEffect, useState } from "react";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/endpoints/user.endpoint";
 import Cookies from 'js-cookie';
 import { getPost } from "@/endpoints/post.endpoint";
@@ -19,7 +19,6 @@ export interface ChatObj {
 
 
 export default function page() {
-    const queryClient = useQueryClient();
     const [userId, setUserId] = useState<string>(Cookies.get('userId') ?? '');
     const [externalUsers, setExternalUsers] = useState<Map<string, User>>(new Map());
     const [posts, setPosts] = useState<Map<string, Post>>(new Map());
@@ -59,13 +58,6 @@ export default function page() {
             console.log("Unique post ids are: ", uniquePostIds)
             console.log("All chat objs are: ", _allChatObjs)
 
-            {/* postsPictureUrl: [], */ }
-            {/* title: string, */ }
-            {/* description: string, */ }
-            {/* condition: string, */ }
-            {/* category: string, */ }
-            {/* ownerUserID: string, */ }
-            {/* dateCreated: string */ }
             const posts = await Promise.all(Array.from(uniquePostIds).map(async (postId) => {
                 const post = await getPost(postId);
                 if (post) {

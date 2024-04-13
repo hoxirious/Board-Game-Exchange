@@ -190,7 +190,7 @@ const page = () => {
                                     <FormControl>
                                         <div className="w-full relative">
                                             <SearchInput
-                                                placeholder="Search a location" 
+                                                placeholder="Search a location"
                                                 givenValue={field.value}
                                                 onSave={field.onChange}
                                                 suggestionsMutation={useSuggestionsMutation(`/location-suggestions`)} />
@@ -203,11 +203,11 @@ const page = () => {
                                 </FormItem>
                             )}
                             />
-                            
+
                             <div className="flex justify-between py-4">
                                 {/* TODO: implement cancel */}
                                 <Button variant="outline" type="button" className="px-12">
-                                    <Link href="/posts">Cancel</Link>
+                                    <Link href="/home">Cancel</Link>
                                 </Button>
                                 <Button type="submit" className="px-12">Post</Button>
                             </div>
