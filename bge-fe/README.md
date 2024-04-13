@@ -43,8 +43,14 @@ Home Page: `/home`
 
 Account Page: `/account/[accountid]` (eg: `/account/1`)
 
-New Listing Page: `/newListing`
+View post: `/posts/[postId]`
+
+Edit post: `/posts/[postId]/edit`
+
+Create post: `posts/create/`
 
 Item Detail Page: `/item/[itemID]` (eg: `/item/1`)
 
-Registration: `/signin` and `/signup`
+Registration: `/signin` and `/signup` and `/recovery`
+
+Admin Page: `/admin` ( email: admin@bge.com, password: admin_password )
