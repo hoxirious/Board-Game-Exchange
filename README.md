@@ -1,5 +1,7 @@
 # SENG 513 Group 8 Project - Board Game Exchange
 
+[![BGE Showcase Video](http://img.youtube.com/vi/AS2iXc5KaX4/0.jpg)](http://www.youtube.com/watch?v=AS2iXc5KaX4 "SENG 513 - Board Game Exchange Showcase")
+
 ## Members
 
 Amnah Hussain - 30095907
